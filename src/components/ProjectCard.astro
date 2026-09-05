@@ -1,0 +1,26 @@
+---
+import MediaPreview from './MediaPreview.astro';
+import type { PortfolioProject } from '../data/projects';
+interface Props { project: PortfolioProject; featured?: boolean; }
+const { project, featured = false } = Astro.props;
+---
+<article class:list={['project-card', { 'project-featured': featured }]}>
+  <div class="project-media">
+    <MediaPreview label={project.title} index={project.id} image={project.image} eager={featured} placeholderCaption={project.placeholderCaption} />
+    {project.image?.cardCaption && <p class="image-credit">{project.image.cardCaption}</p>}
+  </div>
+  <div class="project-body">
+    <p class="project-type">{project.type}</p>
+    <h3>{project.title}</h3>
+    <p class="project-value">{project.short}</p>
+    <ul class="project-proof">
+      {project.highlights.map(point => <li>{point}</li>)}
+    </ul>
+    <p class="project-status"><span class="status">{project.status}</span></p>
+    <div class="technology-tags" aria-label="Подтверждённые технологии">{project.tags.map(tag => <span>{tag}</span>)}</div>
+    <div class="project-actions">
+      <a class="button button-dark" href={project.href}>Посмотреть кейс <span aria-hidden="true">↗</span></a>
+      {project.liveUrl && <a class="text-link project-live" href={project.liveUrl} rel="noopener noreferrer" target="_blank">Открыть проект <span aria-hidden="true">↗</span></a>}
+    </div>
+  </div>
+</article>

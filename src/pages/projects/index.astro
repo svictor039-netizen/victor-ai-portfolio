@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CarouselControls from '../../components/CarouselControls.astro';
+import { projects } from '../../data/projects';
+
+const title = 'Проекты — AI-продукты и цифровые системы';
+const description = 'Каталог реальных работ: AI-консультанты, сервисы, автоматизация, контентные системы и цифровые продукты. Формулировки ограничены подтверждёнными фактами.';
+---
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main id="main" class="container projects-page" data-carousel>
+    <header class="projects-page-intro">
+      <p class="eyebrow">ПРОЕКТЫ</p>
+      <h1>AI-продукты и цифровые системы</h1>
+      <p class="projects-page-lead">Проекты для реальных задач: AI-консультанты, сервисы, автоматизация, контентные системы и цифровые продукты.</p>
+    </header>
+    <p class="draft-note">Формулировки ограничены подтверждёнными материалами. Где фактов мало, это сказано прямо, без выдуманных метрик.</p>
+    <div class="projects-catalog-heading"><h2 class="projects-catalog-title">Все работы</h2><CarouselControls label="Все работы" /></div>
+    <div class="projects-grid projects-catalog carousel-track carousel-track-projects" data-carousel-track tabindex="0" aria-label="Все работы">{projects.map(project => <ProjectCard project={project} />)}</div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

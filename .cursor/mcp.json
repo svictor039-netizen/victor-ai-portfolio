@@ -1,0 +1,15 @@
+﻿{
+    "mcpServers":  {
+                       "shadcn":  {
+                                      "command":  "C:\\Program Files\\nodejs\\node.exe",
+                                      "args":  [
+                                                   "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js",
+                                                   "-y",
+                                                   "shadcn@latest",
+                                                   "mcp"
+                                               ],
+                                      "cwd":  "D:\\AI Workflows\\victor-ai-portfolio",
+                                      "type":  "stdio"
+                                  }
+                   }
+}

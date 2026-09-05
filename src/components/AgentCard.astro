@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import type { AgentOffer } from '../data/home';
+interface Props { agent: AgentOffer; }
+const { agent } = Astro.props;
+const status = agent.caseHref ? 'Есть подтверждённый кейс' : 'Можно разработать под вашу задачу';
+---
+<article class="agent-card icon-host">
+  <div class="agent-top">
+    <span class:list={['type-icon', 'icon-outline', agent.spark && 'icon-spark']}><Icon name={agent.icon} /></span>
+    <h4>{agent.name}</h4>
+  </div>
+  <p class="agent-problem">{agent.problem}</p>
+  <p class="agent-does"><span>Что делает</span>{agent.does}</p>
+  <p class="agent-status">{status}</p>
+  <div class="agent-actions">
+    {agent.caseHref
+      ? (
+        <>
+          <a class="text-link" href={agent.caseHref}>Смотреть кейс <span aria-hidden="true">↗</span></a>
+          <a class="text-link agent-secondary" href="#contact">Обсудить такого агента</a>
+        </>
+      )
+      : <a class="text-link" href="#contact">Обсудить разработку <span aria-hidden="true">↗</span></a>
+    }
+  </div>
+</article>

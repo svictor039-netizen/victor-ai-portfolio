@@ -1,0 +1,68 @@
+---
+const path = Astro.url.pathname;
+const navigation = [
+  ['Проекты', '/projects/'], ['AI-агенты', '/#agents'], ['Услуги', '/#services'],
+  ['Блог', '/#materials'], ['Обо мне', '/#about'],
+];
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand icon-host" aria-label="Виктор — на главную"><span class="brand-mark icon-outline icon-spark" aria-hidden="true">v<span>↗</span></span><span>Виктор<span class="brand-subtitle">AI · DEVELOPMENT</span></span></a>
+    <button class="theme-toggle" type="button" aria-label="Светлая тема" aria-pressed="false" hidden><span class="theme-sun" aria-hidden="true">☀</span><span class="theme-moon" aria-hidden="true">☾</span></button>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" hidden>Меню <span aria-hidden="true">+</span></button>
+    <nav id="main-navigation" aria-label="Основная навигация">
+      {navigation.map(([label, href]) => <a href={href} aria-current={href === '/projects/' && path.startsWith('/projects') ? 'page' : undefined}>{label}</a>)}
+      <a href="/#contact" class="button button-dark header-cta">Обсудить задачу <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+<script>
+  const themeButton = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  function applyTheme(theme: string) {
+    const light = theme === 'light';
+    document.documentElement.dataset.theme = light ? 'light' : 'dark';
+    document.documentElement.classList.toggle('dark', !light);
+    themeButton?.setAttribute('aria-pressed', String(light));
+    if (themeButton) themeButton.title = light ? 'Включить тёмную тему' : 'Включить светлую тему';
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!.content = light ? '#f7f8f6' : '#030712';
+    document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')!.content = light ? 'light' : 'dark';
+  }
+  if (themeButton) {
+    applyTheme(document.documentElement.dataset.theme || 'dark');
+    themeButton.hidden = false;
+    themeButton.addEventListener('click', () => {
+      const theme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      applyTheme(theme);
+      try { localStorage.setItem('victor-theme', theme); } catch {}
+    });
+    window.addEventListener('storage', event => {
+      if (event.key === 'victor-theme' || event.key === null) applyTheme(event.newValue === 'light' ? 'light' : 'dark');
+    });
+  }
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const navigation = document.querySelector<HTMLElement>('#main-navigation');
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (toggle && navigation && header) {
+    header.classList.add('menu-enhanced');
+    toggle.hidden = false;
+    const close = () => { toggle.setAttribute('aria-expanded', 'false'); header.classList.remove('menu-open'); };
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      header.classList.toggle('menu-open', open);
+    });
+    navigation.addEventListener('click', (event) => {
+      const link = (event.target as HTMLElement).closest('a');
+      if (link) {
+        close();
+        const target = document.getElementById(link.hash.slice(1));
+        if (target) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { close(); toggle.focus(); }
+    });
+    document.addEventListener('click', (event) => { if (!header.contains(event.target as Node)) close(); });
+    matchMedia('(min-width: 960px)').addEventListener('change', close);
+  }
+</script>

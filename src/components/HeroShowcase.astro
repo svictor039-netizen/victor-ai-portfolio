@@ -1,0 +1,16 @@
+---
+interface Props { label?: string; }
+const { label = 'Принцип работы: задача, система, результат' } = Astro.props;
+---
+<!-- Replace the default slot with a verified product showcase when available. -->
+      <aside class="hero-diagram" aria-label={label}>
+        <slot>
+        <div class="diagram-heading"><span>ПРИНЦИП РАБОТЫ</span><span aria-hidden="true">↘</span></div>
+        <ol class="diagram-steps">
+          <li><span class="step-number">01</span><div><strong>Ваша задача</strong><p>Что важно упростить?</p></div></li>
+          <li><span class="step-number">02</span><div><strong>Продуманная система</strong><p>AI + данные + интеграции</p></div></li>
+          <li><span class="step-number">03</span><div><strong>Проверяемый результат</strong><p>Понятный рабочий сценарий</p></div></li>
+        </ol>
+        <div class="diagram-footer"><span>Человек ставит цель.</span><strong>Технологии помогают её достичь.</strong></div>
+        </slot>
+      </aside>

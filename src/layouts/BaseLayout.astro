@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import '../styles/visual-upgrade.css';
+import { site, canonicalUrl, isIndexable } from '../config/site';
+interface Props { title?: string; description?: string; noindex?: boolean; ogImage?: string; }
+const { title = site.title, description = site.description, noindex = false, ogImage } = Astro.props;
+const canonical = canonicalUrl(Astro.url.pathname);
+const ogImageUrl = ogImage && site.origin ? new URL(ogImage, site.origin).href : undefined;
+---
+<!doctype html>
+<html lang="ru" class="dark" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#030712" />
+    <meta name="color-scheme" content="dark" />
+    <script is:inline>
+      (() => {
+        let theme = 'dark';
+        try { if (localStorage.getItem('victor-theme') === 'light') theme = 'light'; } catch {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.classList.toggle('dark', theme !== 'light');
+        document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f7f8f6' : '#030712';
+        document.querySelector('meta[name="color-scheme"]').content = theme;
+      })();
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={!noindex && isIndexable ? 'index, follow' : 'noindex, nofollow'} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Victor AI Portfolio" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+    <div class="shooting-star-layer" data-shooting-star-layer aria-hidden="true"></div>
+    <slot />
+    <script>
+      function initializeShootingStars() {
+        const layer = document.querySelector<HTMLElement>('[data-shooting-star-layer]');
+        if (!layer || layer.dataset.starReady === 'true') return;
+
+        layer.dataset.starReady = 'true';
+        const motion = matchMedia('(prefers-reduced-motion: reduce)');
+        let timer = 0;
+
+        const schedule = () => {
+          window.clearTimeout(timer);
+          if (motion.matches || document.hidden) return;
+          timer = window.setTimeout(spawn, 10000 + Math.random() * 5000);
+        };
+
+        const spawn = () => {
+          if (motion.matches || document.hidden) {
+            schedule();
+            return;
+          }
+
+          const star = document.createElement('span');
+          star.className = 'shooting-star';
+          const direction = Math.random() < .5 ? -1 : 1;
+          const angle = direction * (10 + Math.random() * 20);
+          const distance = Math.min(innerHeight * (.58 + Math.random() * .14), innerHeight - 36);
+          const drift = Math.tan(Math.abs(angle) * Math.PI / 180) * distance * direction;
+          const duration = 2000 + Math.random() * 1000;
+          const x = direction > 0 ? 8 + Math.random() * 27 : 65 + Math.random() * 27;
+          star.style.setProperty('--star-x', `${x}vw`);
+          star.style.setProperty('--star-angle', `${-angle}deg`);
+          star.style.setProperty('--star-dx', `${drift}px`);
+          star.style.setProperty('--star-dy', `${distance}px`);
+          star.style.setProperty('--star-tail', `${28 + Math.random() * 24}px`);
+          star.style.setProperty('--star-duration', `${duration}ms`);
+          layer.append(star);
+          window.setTimeout(() => star.remove(), duration + 100);
+          schedule();
+        };
+
+        motion.addEventListener('change', () => {
+          if (motion.matches) layer.replaceChildren();
+          schedule();
+        });
+        document.addEventListener('visibilitychange', schedule);
+        schedule();
+      }
+
+      initializeShootingStars();
+      document.addEventListener('astro:page-load', initializeShootingStars);
+    </script>
+  </body>
+</html>
