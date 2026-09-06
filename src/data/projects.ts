@@ -309,7 +309,7 @@ export const projects: PortfolioProject[] = [
     type: 'AI / контентная автоматизация',
     status: 'Локальный MVP',
     tags: ['Python', 'Ollama', 'Tavily', 'MoviePy'],
-    result: 'CLI-pipeline и сохранённый локальный результат. Публичного онлайн-сервиса нет.',
+    result: 'CLI-pipeline подтверждён локально: 36 автоматических тестов проходят, сохранённый MP4 проходит полную проверку 1080×1920, аудио и avatar overlay. Публичного онлайн-сервиса нет.',
     href: '/projects/ai-content-factory/',
     image: {
       src: '/projects/ai-content-factory.webp',
@@ -321,11 +321,11 @@ export const projects: PortfolioProject[] = [
     },
     seoTitle: 'AI Content Factory 2026 — кейс контентного pipeline',
     seoDescription: 'Локальный MVP: тема, источники, сценарий и вертикальное видео. Без публичного онлайн-сервиса и без выдуманных метрик.',
-    incomplete: true,
+    incomplete: false,
     visualNote: [
       'У проекта нет web-интерфейса.',
       'Показан кадр сохранённого прогона, обрезанный так, чтобы не публиковать личное фото с оверлея.',
-      'Повторный запуск pipeline в этой сессии не выполнялся.',
+      '6 сентября 2026 локально повторно пройдены 36 тестов и валидация сохранённого MP4.',
     ],
     sections: [
       {
@@ -350,11 +350,11 @@ export const projects: PortfolioProject[] = [
       },
       {
         title: 'Доказательства',
-        body: 'Локально найдены video.mp4, семь PNG-кадров и JSON-пакет. Показанный кадр — сцена 1 сохранённого прогона. Публичный репозиторий https://github.com/svictor039-netizen/ai-content-factory-2026 подтверждён аудитом 4 сентября 2026. Это публикация исходного кода, не demo-сервис.',
+        body: 'Локально найдены video.mp4, семь PNG-кадров и JSON-пакет. 6 сентября 2026 команда pytest завершилась результатом 36 passed, а validate_output.py подтвердил полный MVP: 1080×1920, 9:16, аудио и avatar overlay. Показанный кадр — сцена 1 сохранённого прогона. Публичный репозиторий https://github.com/svictor039-netizen/ai-content-factory-2026 подтверждён аудитом 4 сентября 2026. Это публикация исходного кода, не demo-сервис.',
       },
       {
         title: 'Текущий статус',
-        body: 'Локальный MVP. Production-сервис не подтверждён и не является заявленным scope.',
+        body: 'Проверенный локальный MVP. Production-сервис не подтверждён и не является заявленным scope.',
       },
       {
         title: 'Ограничения',
@@ -426,9 +426,97 @@ export const projects: PortfolioProject[] = [
       },
     ],
   },
+  {
+    slug: 'b2b-leadflow',
+    id: '07',
+    title: 'B2B LeadFlow Agent 2026',
+    short: 'Автономный контур B2B-лидогенерации: исследование, квалификация, outreach-черновики, compliance и безопасная оркестрация.',
+    highlights: [
+      '253 backend-теста зафиксированы при закрытии Stage 8',
+      'Frontend production build повторно прошёл 6 сентября 2026',
+      '12 скриншотов подтверждают UI, Docker, readiness и safe-mode smoke',
+    ],
+    type: 'AI-агент / B2B automation',
+    status: 'Проверенный safe demo',
+    tags: ['FastAPI', 'React', 'PostgreSQL', 'Celery'],
+    result: 'Roadmap Stage 0–8 завершён в safe-demo режиме: квалификация, согласование, compliance, оркестрация и production-like инфраструктура без реальных рассылок.',
+    href: '/projects/b2b-leadflow/',
+    image: {
+      src: '/projects/b2b-leadflow.jpg',
+      alt: 'Экран B2B LeadFlow Agent с этапами выполнения кампании и compliance-контролями',
+      width: 1025,
+      height: 975,
+      cardCaption: 'Safe-demo: execution и compliance',
+      caption: 'Сохранённый экран B2B LeadFlow Agent: управление выполнением кампании и compliance. Реальная отправка писем отключена.',
+    },
+    seoTitle: 'B2B LeadFlow Agent 2026 — безопасная автоматизация лидогенерации',
+    seoDescription: 'Кейс автономного B2B leadflow: FastAPI, React, PostgreSQL, Celery, compliance, тесты и production-like инфраструктура без реальных рассылок.',
+    incomplete: false,
+    visualNote: [
+      'Показан сохранённый экран локального safe-demo.',
+      'Live provider и реальная отправка намеренно отключены.',
+      'Production-like Docker-контур не означает фактический публичный VPS deploy.',
+    ],
+    sections: [
+      { title: 'Задача', body: 'Собрать управляемый B2B leadflow: исследовать компании, удалять дубли, квалифицировать лиды, готовить outreach и выполнять кампании только после проверок и ручного согласования.' },
+      { title: 'Что создано', body: 'Полноценный frontend и FastAPI backend с кампаниями, компаниями, research runs, lead scoring, review, outreach, execution runs, suppression, readiness и controlled live-pilot infrastructure. Для очередей используются Celery и Redis, для данных — PostgreSQL и Alembic.' },
+      { title: 'AI-компонент', body: 'Архитектура агента организует многошаговый leadflow и отделяет автоматическую обработку от ручного approval. В просмотренных материалах нет доказательства production-вызова внешней LLM или live email provider, поэтому кейс не заявляет реальные автономные рассылки.' },
+      { title: 'Как работает', body: 'Кампания проходит последовательные стадии: research → deduplication → qualification → review → outreach draft → approval → test execution → analytics и compliance. SYSTEM_STOP_ALL, suppression и allowlist имеют приоритет над отправкой.' },
+      { title: 'Стек', body: 'Python 3.11, FastAPI, Pydantic, SQLAlchemy, Alembic, Celery, PostgreSQL, Redis, React, TypeScript, Vite, Docker Compose, nginx и GitHub Actions.' },
+      { title: 'Доказательства', body: 'В Git-истории сохранены merge-коммиты PR 1–10. Финальный отчёт фиксирует 253 backend-теста, зелёный CI, migration tests и smoke с live_sent=0. 6 сентября 2026 frontend production build повторно завершился успешно. Архив содержит 12 скриншотов UI, readiness, Docker, smoke и GitHub.' },
+      { title: 'Текущий статус', body: 'Проверенный safe demo и production-like локальный контур. Stage 7B с реальным провайдером и canary намеренно не выполнялся; публичный VPS deploy не подтверждён.' },
+      { title: 'Ограничения', body: 'Нельзя заявлять отправленные письма, полученные лиды, конверсию, экономию времени или production-эксплуатацию. Все адреса и providers в демонстрации тестовые; live_sent должен оставаться равен нулю.' },
+      { title: 'Роль Виктора', body: 'Git-история и учебные отчёты фиксируют последовательную реализацию стадий проекта под аккаунтом Victor Smirnov. Точный вклад AI-инструментов разработки отдельно не измерялся.' },
+    ],
+  },
+  {
+    slug: 'travel-mcp-agent',
+    id: '08',
+    title: 'Travel MCP Agent 2026',
+    short: 'Чат-агент собирает поездку через несколько MCP-инструментов: перелёты, отели и достопримечательности в одном сценарии.',
+    highlights: [
+      'Kiwi, Trivago и Foursquare в одном агентском потоке',
+      'Нормализация городов, аэропортов и дат плюс retry/fallback',
+      '10 скриншотов показывают карточки результатов и MCP-логи',
+    ],
+    type: 'AI-агент / MCP',
+    status: 'Проверенное demo',
+    tags: ['MCP', 'Kiwi', 'Trivago', 'Foursquare'],
+    result: 'Сохранённое demo подтверждает маршрутизацию запросов и multi-MCP сценарий для рейсов, отелей и достопримечательностей. Публичный runtime и локальный исходный код не сохранены.',
+    href: '/projects/travel-mcp-agent/',
+    image: {
+      src: '/projects/travel-mcp-agent.jpg',
+      alt: 'Travel MCP Agent показывает варианты перелётов Sofia — Prague и журнал вызовов Kiwi MCP',
+      width: 1522,
+      height: 837,
+      cardCaption: 'Multi-MCP demo: перелёты и системные логи',
+      caption: 'Сохранённый экран общего сценария поездки: карточки перелётов SOF → PRG и журнал вызовов MCP-инструментов.',
+    },
+    seoTitle: 'Travel MCP Agent 2026 — кейс агента с Kiwi, Trivago и Foursquare',
+    seoDescription: 'Демонстрационный Travel MCP Agent: перелёты, отели, достопримечательности, маршрутизация запросов, retry и multi-MCP сценарий.',
+    incomplete: false,
+    visualNote: [
+      'Показан реальный сохранённый экран демонстрации, а не нарисованный mockup.',
+      'В папке проекта есть документация, тестовые сценарии и 10 скриншотов, но нет локальных исходников.',
+      'Цены и доступность на скриншоте относятся к конкретному демонстрационному запросу и не являются актуальным предложением.',
+    ],
+    sections: [
+      { title: 'Задача', body: 'Дать пользователю один диалог для планирования поездки: понять запрос, выбрать нужный туристический инструмент и собрать рейсы, отели и достопримечательности в понятные карточки.' },
+      { title: 'Что создано', body: 'Демонстрационный чат-агент с отдельными сценариями Kiwi, Trivago и Foursquare, системным журналом MCP-вызовов и общим multi-plan запросом. Для Праги сохранены результаты по достопримечательностям, отелям и маршруту SOF → PRG.' },
+      { title: 'AI-компонент', body: 'Агент маршрутизирует запрос на нужные MCP-инструменты, уточняет недостающие параметры и объединяет ответы нескольких сервисов. Даты, города и airport codes нормализуются до формата конкретного API.' },
+      { title: 'Как работает', body: 'Запрос пользователя классифицируется по намерению. Для рейсов вызывается Kiwi search-flight, для отелей — Trivago suggestions и accommodation search, для мест — Foursquare search_places/get_place. Общий запрос объединяет результаты нескольких направлений.' },
+      { title: 'Стек', body: 'MCP, Kiwi, Trivago, Foursquare, чат-интерфейс Replit и карточная выдача. Конкретный framework и серверный код по локальным материалам подтвердить нельзя, потому что каталог 01_replit_app пуст.' },
+      { title: 'Доказательства', body: 'Сохранены 10 полноразмерных скриншотов 1520–1836 px: перелёты, отели, достопримечательности и общий план. На экранах присутствуют карточки результатов и системные MCP-логи. README фиксирует 15 найденных рейсов SOF → PRG и успешный retry Trivago через Praha.' },
+      { title: 'Текущий статус', body: 'Завершённое учебное demo. Это не заявление о работающем сегодня публичном сервисе: live URL и повторный runtime-запуск не подтверждены.' },
+      { title: 'Ограничения', body: 'Локальных исходников нет, поэтому невозможно независимо проверить реализацию, тесты и актуальные ответы внешних сервисов. Цены и выдача зависят от MCP-провайдеров и даты запроса.' },
+      { title: 'Роль Виктора', body: 'Материалы находятся в рабочем каталоге Виктора и содержат последовательный отчёт о настройке и исправлениях demo, но Git-истории или отдельного подтверждения авторства кода нет.', needsEvidence: true },
+    ],
+  },
 ];
 
-export const featuredProjects = projects.slice(0, 3);
+export const featuredProjects = ['b2b-leadflow', 'ai-content-factory', 'travel-mcp-agent']
+  .map(slug => projects.find(project => project.slug === slug))
+  .filter((project): project is PortfolioProject => Boolean(project));
 
 export function getProject(slug: string | undefined) {
   return projects.find(project => project.slug === slug);
