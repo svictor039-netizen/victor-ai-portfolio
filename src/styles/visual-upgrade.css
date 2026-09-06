@@ -154,23 +154,17 @@
 .media-preview.has-image { padding: 0; background: var(--level-3); }
 .media-preview.has-image::before,.media-preview.has-image::after { display: none; }
 .media-preview.media-project.has-image {
-  padding: var(--preview-frame-pad);
-  background: var(--preview-frame);
+  padding: 0;
+  background: transparent;
   border-bottom-color: var(--preview-frame-border);
-  box-shadow: var(--preview-frame-shadow);
-}
-.media-preview.media-project.has-image::after {
-  display: block;
-  inset: 0;
-  z-index: 0;
-  background: var(--preview-frame-tint);
+  box-shadow: none;
 }
 .media-preview img { width: 100%; height: 100%; object-fit: contain; }
-.media-preview.has-image img { object-fit: cover; object-position: top center; }
+.media-preview.has-image img { object-fit: cover; object-position: var(--card-image-origin, 50% 0%); }
 .media-preview.media-project.has-image img {
   position: relative;
   z-index: 1;
-  border-radius: var(--preview-screenshot-radius);
+  border-radius: 0;
   filter: none;
   transform: scale(var(--card-image-scale, 1));
   transform-origin: var(--card-image-origin, 50% 0%);
