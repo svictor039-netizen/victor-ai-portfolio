@@ -172,6 +172,8 @@
   z-index: 1;
   border-radius: var(--preview-screenshot-radius);
   filter: none;
+  transform: scale(var(--card-image-scale, 1));
+  transform-origin: var(--card-image-origin, 50% 0%);
 }
 .project-body { padding: 24px 24px 22px; }
 .project-body h3 { font-size: 1.5rem; letter-spacing: -.03em; }

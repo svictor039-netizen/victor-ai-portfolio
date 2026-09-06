@@ -1,10 +1,10 @@
 ---
 import Icon from './Icon.astro';
-interface Props { label: string; index?: string; image?: { src: string; alt: string; width: number; height: number }; kind?: 'project' | 'article'; eager?: boolean; placeholderCaption?: string; }
+interface Props { label: string; index?: string; image?: { src: string; alt: string; width: number; height: number; cardScale?: number; cardOrigin?: string }; kind?: 'project' | 'article'; eager?: boolean; placeholderCaption?: string; }
 const { label, index, image, kind = 'project', eager = false, placeholderCaption } = Astro.props;
 ---
 <div class:list={['media-preview', `media-${kind}`, { 'has-image': Boolean(image) }]}>
-  {image ? <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading={eager ? 'eager' : 'lazy'} decoding="async" /> : <>
+  {image ? <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading={eager ? 'eager' : 'lazy'} decoding="async" style={`--card-image-scale:${image.cardScale ?? 1};--card-image-origin:${image.cardOrigin ?? '50% 0%'}`} /> : <>
     <span class="media-index" aria-hidden="true">{index} / {kind === 'project' ? 'PROJECT PREVIEW' : 'FIELD NOTES'}</span>
     <div class="media-center"><span class:list={['media-icon', kind === 'article' && 'icon-outline']}><Icon name={kind === 'project' ? 'image' : 'document'} /></span><span>{label}</span></div>
     <span class="media-caption">{placeholderCaption ?? (kind === 'project' ? 'Нужен реальный скриншот интерфейса' : 'Иллюстрация будущего материала')}</span>

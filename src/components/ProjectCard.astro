@@ -3,11 +3,12 @@ import MediaPreview from './MediaPreview.astro';
 import type { PortfolioProject } from '../data/projects';
 interface Props { project: PortfolioProject; featured?: boolean; }
 const { project, featured = false } = Astro.props;
+const cardImage = project.cardImage ?? project.image;
 ---
 <article class:list={['project-card', { 'project-featured': featured }]}>
   <div class="project-media">
-    <MediaPreview label={project.title} index={project.id} image={project.image} eager={featured} placeholderCaption={project.placeholderCaption} />
-    {project.image?.cardCaption && <p class="image-credit">{project.image.cardCaption}</p>}
+    <MediaPreview label={project.title} index={project.id} image={cardImage} eager={featured} placeholderCaption={project.placeholderCaption} />
+    {cardImage?.cardCaption && <p class="image-credit">{cardImage.cardCaption}</p>}
   </div>
   <div class="project-body">
     <p class="project-type">{project.type}</p>

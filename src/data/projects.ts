@@ -1,4 +1,4 @@
-export type ProjectImage = { src: string; alt: string; width: number; height: number; cardCaption?: string; caption?: string };
+export type ProjectImage = { src: string; alt: string; width: number; height: number; cardCaption?: string; caption?: string; cardScale?: number; cardOrigin?: string };
 
 export type CaseSection = {
   title: string;
@@ -19,6 +19,7 @@ export type PortfolioProject = {
   href: string;
   liveUrl?: string;
   image?: ProjectImage;
+  cardImage?: ProjectImage;
   visualNote?: string[];
   placeholderCaption?: string;
   seoTitle: string;
@@ -186,6 +187,14 @@ export const projects: PortfolioProject[] = [
       alt: 'Главная «Волшебного Сказочника»: создание новой сказки',
       width: 1280,
       height: 800,
+      cardScale: 1.85,
+      cardOrigin: '50% 0%',
+    },
+    cardImage: {
+      src: '/projects/fairytales-infinite-card.jpg',
+      alt: 'Иллюстрация «Волшебный Сказочник»: герои сказок на страницах волшебной книги',
+      width: 1531,
+      height: 856,
     },
     seoTitle: 'FairyTales Infinite — кейс публичного демо сказочника',
     seoDescription: 'Волшебный Сказочник: что видно в публичном демо, какой стек есть в коде и какие AI-заявления пока нельзя подтвердить.',
@@ -319,6 +328,12 @@ export const projects: PortfolioProject[] = [
       cardCaption: 'Кадр результата pipeline, не web UI',
       caption: 'Кадр сохранённого локального прогона AI Content Factory. Это выход генератора, не скриншот веб-интерфейса: web UI в MVP нет.',
     },
+    cardImage: {
+      src: '/projects/ai-content-factory-card.jpg',
+      alt: 'Иллюстрация AI Content Factory: роботы создают контент за ноутбуками',
+      width: 1534,
+      height: 825,
+    },
     seoTitle: 'AI Content Factory 2026 — кейс контентного pipeline',
     seoDescription: 'Локальный MVP: тема, источники, сценарий и вертикальное видео. Без публичного онлайн-сервиса и без выдуманных метрик.',
     incomplete: false,
@@ -382,6 +397,12 @@ export const projects: PortfolioProject[] = [
     tags: ['Python', 'Telegram', 'SQLite', 'Ollama'],
     result: 'Локальный private MVP. Публичный username и live-доступ не подтверждены.',
     href: '/projects/catch-job-bot/',
+    cardImage: {
+      src: '/projects/catch-job-bot-card.jpg',
+      alt: 'Иллюстрация Catch Job Bot: робот ищет вакансию через цифровую лупу',
+      width: 1264,
+      height: 848,
+    },
     placeholderCaption: 'Безопасного публичного экрана Telegram нет',
     seoTitle: 'Catch Job Bot 2026 — кейс приватного бота разбора заказов',
     seoDescription: 'Приватный MVP: LLM-разбор заказа, поиск на HeadHunter и черновик отклика. Без публичного бота и без статуса AI-рекрутера.',
