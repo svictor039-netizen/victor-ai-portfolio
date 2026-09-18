@@ -5,12 +5,13 @@
  */
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
-const DB_DIR = join(process.cwd(), 'data');
+const DB_PATH = process.env.DATABASE_PATH || join(process.cwd(), 'data', 'victor.db');
+const DB_DIR = dirname(DB_PATH);
 mkdirSync(DB_DIR, { recursive: true });
 
-const db = new DatabaseSync(join(DB_DIR, 'victor.db'));
+const db = new DatabaseSync(DB_PATH);
 
 function init() {
   db.exec(`

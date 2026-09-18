@@ -2,7 +2,7 @@
 import { buildLeadProfile, qualify, formatQualificationSummary } from './lead-profile.mjs';
 import { handleConsultRequest } from './consult-handler.mjs';
 
-const RECIPIENT = 'vslpk@inbox.ru';
+// RECIPIENT is now env-driven via LEAD_RECIPIENT
 const MAX_BYTES = 32_768;
 const LIMITS = { name: 100, contact: 200, task: 3000, process: 3000, resources: 2000, result: 2000, deadline: 100, website: 200 };
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -175,6 +175,7 @@ export async function handleRequest(request, env, fetcher = fetch) {
   }
   if (request.method !== 'POST') return respond(405, 'method');
   if (!env.RESEND_API_KEY || !env.MAIL_FROM || !env.TURNSTILE_SECRET_KEY || env.LEAD_CONSENT_CONFIRMED !== 'true') return respond(503, 'unavailable');
+  if (!env.LEAD_RECIPIENT) return respond(503, 'config_error');
   if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return respond(415, 'content_type');
 
   let body;
@@ -243,7 +244,7 @@ export async function handleRequest(request, env, fetcher = fetch) {
 
     const email = {
       from: env.MAIL_FROM,
-      to: [RECIPIENT],
+      to: [env.LEAD_RECIPIENT],
       subject: clean.kind === 'brief' ? 'Бриф с сайта Виктора' : 'Заявка на оценку проекта',
       text,
     };

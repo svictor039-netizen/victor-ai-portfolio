@@ -15,7 +15,10 @@ function respond(status: number, body: Record<string, unknown>) {
 export const POST: APIRoute = async ({ request }) => {
   const auth = request.headers.get('authorization') || '';
   const token = (typeof process !== 'undefined' && process.env?.INGEST_TOKEN) ? process.env.INGEST_TOKEN : '';
-  if (token && auth !== `Bearer ${token}`) {
+  if (!token) {
+    return respond(503, { ok: false, code: 'not_configured' });
+  }
+  if (auth !== `Bearer ${token}`) {
     return respond(401, { ok: false, code: 'unauthorized' });
   }
 
