@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import { handleRequest } from './lead-worker.mjs';
 
 const origin = 'https://portfolio.example';
-const env = { ALLOWED_ORIGINS: origin, RESEND_API_KEY: 'test-secret', MAIL_FROM: 'test@example.com', TURNSTILE_SECRET_KEY: 'test-secret', LEAD_CONSENT_CONFIRMED: 'true' };
+const env = { ALLOWED_ORIGINS: origin, RESEND_API_KEY: 'test-secret', MAIL_FROM: 'test@example.com', TURNSTILE_SECRET_KEY: 'test-secret', LEAD_CONSENT_CONFIRMED: 'true', LEAD_RECIPIENT: 'vslpk@inbox.ru' };
 const payload = { kind: 'request', name: 'Тест', contact: '@test', task: 'Проверка формы', consent: true, consentVersion: '2026-09-09', requestId: '12345678-1234-4234-8234-123456789abc', turnstileToken: 'test-token' };
 const makeRequest = (body = payload, headers = {}, method = 'POST') => new Request('https://worker.example/api/leads', { method, headers: { Origin: origin, 'Content-Type': 'application/json', ...headers }, ...(method === 'POST' ? { body: JSON.stringify(body) } : {}) });
 const noNetwork = () => { throw new Error('Unexpected network request'); };
 const challenge = () => Response.json({ success: true, action: 'lead', hostname: 'portfolio.example' });
 
 test('missing configuration and unconfirmed consent fail closed', async () => {
-  for (const missing of ['RESEND_API_KEY', 'MAIL_FROM', 'TURNSTILE_SECRET_KEY', 'LEAD_CONSENT_CONFIRMED']) {
+  for (const missing of ['RESEND_API_KEY', 'MAIL_FROM', 'TURNSTILE_SECRET_KEY', 'LEAD_CONSENT_CONFIRMED', 'LEAD_RECIPIENT']) {
     const response = await handleRequest(makeRequest(), { ...env, [missing]: '' }, noNetwork);
     assert.equal(response.status, 503);
   }
@@ -51,7 +51,7 @@ test('both form types send only to fixed recipient with a stable idempotency key
       assert.deepEqual(await response.json(), { ok: true });
     }
     assert.deepEqual(emails[0], emails[1]);
-    assert.deepEqual(emails[0].body.to, ['vslpk@inbox.ru']);
+    assert.deepEqual(emails[0].body.to, [env.LEAD_RECIPIENT]);
     assert.equal(emails[0].body.from, env.MAIL_FROM);
     assert.equal(emails[0].headers['Idempotency-Key'], 'lead/' + payload.requestId);
     assert.match(emails[0].body.text, /Согласие: да/);
@@ -423,4 +423,73 @@ test('aiHandoff does not affect lead qualification score', async () => {
   const qualBlock = text2.split('--- Квалификация лида ---')[1]?.split('--- AI summary')[0] || '';
   assert.doesNotMatch(qualBlock, /b2b-leadflow/);
   assert.doesNotMatch(qualBlock, /AI-агент для продаж в Telegram/);
+});
+
+// Back Office ingestion tests
+const ingestEnv = { ...env, BACKOFFICE_INGEST_URL: 'https://backoffice.example.com/api/ingest', INGEST_TOKEN: 'ingest-secret' };
+
+test('successful ingestion sends Bearer token and lead data to Back Office', async () => {
+  const ingestCalls = [];
+  const send = async (url, init) => {
+    if (url.includes('siteverify')) return challenge();
+    if (url === ingestEnv.BACKOFFICE_INGEST_URL) {
+      ingestCalls.push({ url, headers: init.headers, body: JSON.parse(init.body) });
+      return Response.json({ ok: true, id: payload.requestId });
+    }
+    return Response.json({ id: 'email-id' });
+  };
+  const response = await handleRequest(makeRequest(payload), ingestEnv, send);
+  assert.equal(response.status, 200);
+  assert.equal(ingestCalls.length, 1);
+  assert.equal(ingestCalls[0].headers['Authorization'], 'Bearer ' + ingestEnv.INGEST_TOKEN);
+  assert.equal(ingestCalls[0].body.lead_id, payload.requestId);
+  assert.equal(ingestCalls[0].body.contact, payload.contact);
+});
+
+test('ingestion failure does not break successful email delivery', async () => {
+  const send = async (url) => {
+    if (url.includes('siteverify')) return challenge();
+    if (url === ingestEnv.BACKOFFICE_INGEST_URL) throw new Error('ingest timeout');
+    return Response.json({ id: 'email-id' });
+  };
+  const response = await handleRequest(makeRequest(payload), ingestEnv, send);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+});
+
+test('duplicate response from Back Office does not break email delivery', async () => {
+  const send = async (url) => {
+    if (url.includes('siteverify')) return challenge();
+    if (url === ingestEnv.BACKOFFICE_INGEST_URL) return Response.json({ ok: true, id: payload.requestId, duplicate: true });
+    return Response.json({ id: 'email-id' });
+  };
+  const response = await handleRequest(makeRequest(payload), ingestEnv, send);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+});
+
+test('missing BACKOFFICE_INGEST_URL skips ingestion silently', async () => {
+  const envNoUrl = { ...env, BACKOFFICE_INGEST_URL: '', INGEST_TOKEN: 'ingest-secret' };
+  let ingestCalled = false;
+  const send = async (url) => {
+    if (url.includes('siteverify')) return challenge();
+    if (url.includes('ingest')) { ingestCalled = true; return Response.json({ ok: true }); }
+    return Response.json({ id: 'email-id' });
+  };
+  const response = await handleRequest(makeRequest(payload), envNoUrl, send);
+  assert.equal(response.status, 200);
+  assert.equal(ingestCalled, false);
+});
+
+test('missing INGEST_TOKEN skips ingestion silently', async () => {
+  const envNoToken = { ...env, BACKOFFICE_INGEST_URL: 'https://backoffice.example.com/api/ingest', INGEST_TOKEN: '' };
+  let ingestCalled = false;
+  const send = async (url) => {
+    if (url.includes('siteverify')) return challenge();
+    if (url.includes('ingest')) { ingestCalled = true; return Response.json({ ok: true }); }
+    return Response.json({ id: 'email-id' });
+  };
+  const response = await handleRequest(makeRequest(payload), envNoToken, send);
+  assert.equal(response.status, 200);
+  assert.equal(ingestCalled, false);
 });
