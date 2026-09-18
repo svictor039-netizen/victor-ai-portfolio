@@ -1,4 +1,6 @@
 ---
+import Cta from "./Cta";
+import { contact } from '../config/contact';
 import Icon from './Icon.astro';
 import type { AgentOffer } from '../data/home';
 interface Props { agent: AgentOffer; }
@@ -17,11 +19,11 @@ const status = agent.caseHref ? 'Есть подтверждённый кейс'
     {agent.caseHref
       ? (
         <>
-          <a class="text-link" href={agent.caseHref}>Смотреть кейс <span aria-hidden="true">↗</span></a>
-          <a class="text-link agent-secondary" href="#contact">Обсудить такого агента</a>
+          <a class="text-link" href={agent.caseHref}>Смотреть кейс</a>
+          <Cta href="/#contact" label={contact.primaryCta} />
         </>
       )
-      : <a class="text-link" href="#contact">Обсудить разработку <span aria-hidden="true">↗</span></a>
+      : <Cta href="/#contact" label={contact.primaryCta} />
     }
   </div>
 </article>

@@ -1,0 +1,12 @@
+{
+  "name": "victor-portfolio-leads",
+  "main": "lead-worker.mjs",
+  "compatibility_date": "2026-09-09",
+  "workers_dev": true,
+  "observability": { "enabled": false },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://victor-ai-portfolio.svictor-039.chatgpt.site",
+    "MAIL_FROM": "",
+    "LEAD_CONSENT_CONFIRMED": "false"
+  }
+}

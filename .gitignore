@@ -6,3 +6,11 @@ dist/
 !.env.example
 *.log
 .DS_Store
+
+# Local Cloudflare secret files and state
+.dev.vars
+.dev.vars.*
+.wrangler/
+
+# SQLite database files
+data/

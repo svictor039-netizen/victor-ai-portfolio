@@ -1,58 +1,72 @@
 ---
+import Cta from "../components/Cta";
+import VMark from '../components/VMark.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { contact } from '../config/contact';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import HeroShowcase from '../components/HeroShowcase.astro';
-import MediaPreview from '../components/MediaPreview.astro';
 import AgentCard from '../components/AgentCard.astro';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import GradientButton from '../components/kokonutui/gradient-button';
-import ServiceFlipCard from '../components/ServiceFlipCard';
+import AiConsultant from '../components/AiConsultant.astro';
+import ServiceCard from '../components/ServiceCard.astro';
 import CarouselControls from '../components/CarouselControls.astro';
-import { featuredProjects, agentGroups, services, processSteps, articles } from '../data/home';
+import { agentGroups, services, processSteps, workFormats } from '../data/home';
+import { projects } from '../data/projects';
+
+const projectOrder = new Map([
+  'b2b-leadflow', 'ai-content-factory', 'travel-mcp-agent', 'kmk-ai-consultant',
+  'donskoe39', 'leftover-food', 'fairytales-infinite', 'catch-job-bot',
+].map((slug, index) => [slug, index]));
+const homeProjects = [...projects].sort((a, b) =>
+  (projectOrder.get(a.slug) ?? Infinity) - (projectOrder.get(b.slug) ?? Infinity));
 ---
 <BaseLayout>
   <Header />
   <main id="main" class="home-main">
     <section class="hero container" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="accent-line" aria-hidden="true"></span> AI · WEB · АВТОМАТИЗАЦИЯ</p>
-        <h1 id="hero-title">От идеи до работающего <span>AI-продукта</span></h1>
-        <p class="hero-description">Создаю AI-агентов, AI-сервисы, сайты и автоматизацию для реальных бизнес-задач.</p>
-        <div class="hero-actions"><a class="button button-dark" href="#projects">Посмотреть проекты <span aria-hidden="true">↓</span></a><GradientButton className="gradient-button--split-contrast gradient-button--split-short" label="Обсудить задачу" splitAfter={1} href="#contact" /></div>
-        <p class="hero-footnote">От понятной задачи — к решению, которое можно проверить.</p>
+        <p class="eyebrow"><span class="accent-line" aria-hidden="true"></span> AI-АВТОМАТИЗАЦИЯ · АГЕНТЫ · СЕРВИСЫ</p>
+        <div class="hero-title-group icon-host" tabindex="0" role="group" aria-labelledby="hero-title">
+          <VMark size="hero" />
+          <h1 id="hero-title">От идеи до работающего <span>AI-продукта</span></h1>
+        </div>
+        <p class="hero-description">AI-автоматизация бизнеса, AI-агенты и AI-сервисы. От задачи до проверяемого результата.</p>
+        <div class="hero-actions"><Cta href="#projects" label={contact.secondaryCta} /><Cta label={contact.primaryCta} href="#contact" data-event="contact_click" /></div>
+        <p class="hero-footnote">Опишите задачу — после короткого брифа определим подход, объём и следующий шаг.</p>
       </div>
       <HeroShowcase />
     </section>
 
-    <section id="projects" class="section container" aria-labelledby="projects-title">
+    <section id="projects" class="section container" aria-labelledby="projects-title" data-carousel>
       <div class="section-heading"><div><p class="eyebrow">01 / ПРОЕКТЫ</p><h2 id="projects-title">Реальные AI-проекты</h2></div><p>Задача. Решение. Доказательства.<br />Разбор каждого проекта — на отдельной странице.</p></div>
       <p class="draft-note">Формулировки ограничены подтверждёнными материалами. Где фактов мало, это сказано прямо, без выдуманных метрик.</p>
-      <div class="projects-grid">{featuredProjects.map((project, index) => <ProjectCard project={project} featured={index === 0} />)}</div>
-      <p class="projects-more"><a class="text-link" href="/projects/">Все проекты <span aria-hidden="true">↗</span></a><span>8 проектов</span></p>
+      <div class="projects-catalog-heading"><CarouselControls label="Реальные AI-проекты" /></div>
+      <div class="projects-grid projects-catalog carousel-track carousel-track-projects" data-carousel-track tabindex="0" aria-labelledby="projects-title">{homeProjects.map(project => <ProjectCard project={project} />)}</div>
+      <p class="projects-more"><a class="text-link" href="/projects/">Все проекты</a><span>8 проектов</span></p>
     </section>
 
     <section id="agents" class="section section-tinted" aria-labelledby="agents-title"><div class="container">
       <div class="section-heading"><div><p class="eyebrow">02 / РЕШЕНИЯ</p><h2 id="agents-title">AI-агенты для бизнеса</h2></div><p>Цифровые сотрудники для продаж, поддержки, аналитики и внутренних процессов.<br />Подбираются под конкретную задачу бизнеса.</p></div>
       <p class="agents-note">Не все решения показаны как готовые продукты: часть агентов проектируется под задачу клиента.</p>
       <div class="agents-grid">{agentGroups.map(group => <div class="agent-group" data-carousel><div class="group-heading"><h3>{group.title}</h3><div class="group-heading-side"><span>{group.label}</span><CarouselControls label={group.title} /></div></div><div class="agent-catalog carousel-track carousel-track-agents" data-carousel-track tabindex="0" aria-label={group.title}>{group.items.map(agent => <AgentCard agent={agent} />)}</div></div>)}</div>
-      <a class="text-link section-link" href="#resource">Подобрать решение <span aria-hidden="true">↗</span></a>
+      <Cta href="#resource" className="section-link" label="Подобрать решение" />
     </div></section>
 
     <section id="services" class="section container" aria-labelledby="services-title" data-carousel>
-      <div class="section-heading"><div><p class="eyebrow">03 / УСЛУГИ</p><h2 id="services-title">Что можно создать вместе</h2></div><div class="section-heading-actions"><a class="text-link" href="#contact">Обсудить вашу задачу <span aria-hidden="true">↗</span></a><CarouselControls label="Что можно создать вместе" /></div></div>
-      <div class="services-grid carousel-track carousel-track-services" data-carousel-track tabindex="0" aria-label="Что можно создать вместе">{services.map((service) => <ServiceFlipCard client:visible service={service} />)}</div>
+      <div class="section-heading"><div><p class="eyebrow">03 / УСЛУГИ</p><h2 id="services-title">Что можно создать вместе</h2></div><div class="section-heading-actions"><Cta href="#contact" data-event="contact_click" label={contact.primaryCta} /><CarouselControls label="Что можно создать вместе" /></div></div>
+      <div class="services-grid carousel-track carousel-track-services" data-carousel-track tabindex="0" aria-label="Что можно создать вместе">{services.map((service) => <ServiceCard service={service} />)}</div>
     </section>
 
     <section id="process" class="section container process-section" aria-labelledby="process-title">
       <div class="section-heading"><div><p class="eyebrow">04 / ПРОЦЕСС</p><h2 id="process-title">Как мы работаем</h2></div><p>Короткий путь от задачи<br />до запуска и поддержки.</p></div>
-      <ol class="process-grid">{processSteps.map((step, index) => (
+      <ol class="process-grid">{processSteps.map((step) => (
         <li class="icon-host">
           <div class="process-top">
             <span class="type-icon icon-outline"><Icon name={step.icon} /></span>
             <span class="process-number">{step.number}</span>
-            {index < processSteps.length - 1 && <span class="process-arrow" aria-hidden="true">→</span>}
           </div>
           <h3>{step.name}</h3>
           <p>{step.description}</p>
@@ -64,19 +78,33 @@ import { featuredProjects, agentGroups, services, processSteps, articles } from 
           <p>Расскажите о задаче — предложу подходящее решение.</p>
         </div>
         <div class="process-cta-actions">
-          <a class="button button-dark" href="#contact">Обсудить проект</a>
-          <a class="button button-ghost" href="#contact">Написать в Telegram</a>
+          <Cta href="#contact" data-event="contact_click" label={contact.primaryCta} />
+          <Cta href={contact.telegram} target="_blank" rel="noopener noreferrer" data-event="telegram_click" label="Написать в Telegram" />
         </div>
       </div>
     </section>
 
+    <section id="formats" class="section container formats-section" aria-labelledby="formats-title">
+      <div class="section-heading"><div><p class="eyebrow">05 / ФОРМАТЫ РАБОТЫ</p><h2 id="formats-title">Варианты сотрудничества</h2></div><p>От разбора задачи до запуска и поддержки.</p></div>
+      <div class="formats-grid">{workFormats.map((format) => (
+        <article class="format-card icon-host">
+          <h4><VMark size="card" />{format.title}</h4>
+          <p class="format-audience"><strong>Кому:</strong> {format.audience}</p>
+          <p class="format-deliverable"><strong>Что получаете:</strong> {format.deliverable}</p>
+          <Cta href={format.href} label={format.cta} />
+        </article>
+      ))}</div>
+    </section>
+
+    <!-- Blog скрыт до появления реальных публикаций. Код сохранён, секция не рендерится. -->
+    <!--
     <section id="materials" class="section section-alternate" aria-labelledby="materials-title"><div class="container">
       <div class="blog-hero">
         <div class="blog-hero-copy">
           <p class="eyebrow">05 / БЛОГ</p>
           <h2 id="materials-title">Полезные материалы<br />об AI и автоматизации</h2>
           <p class="blog-hero-lead">Практические разборы AI-агентов, автоматизации,<br />баз знаний и реальных решений для бизнеса.</p>
-          <a class="text-link" href="#materials-list">Смотреть материалы <span aria-hidden="true">→</span></a>
+          <a class="text-link" href="#materials-list">Смотреть материалы</a>
         </div>
         <figure class="theme-photo blog-visual">
           <div class="theme-photo-frame">
@@ -84,12 +112,13 @@ import { featuredProjects, agentGroups, services, processSteps, articles } from 
           </div>
         </figure>
       </div>
-      <div id="materials-list" class="articles-grid">{articles.map(([tag, title, excerpt], index) => <article class="article-card icon-host"><MediaPreview label={tag} index={String(index + 1).padStart(2, '0')} kind="article" /><div class="article-body"><div class="article-top"><span>{tag}</span><span aria-hidden="true">0{index + 1}</span></div><h3>{title}</h3><p class="article-excerpt">{excerpt}</p><span class="article-state">Планируемая тема · ещё не опубликовано</span><details class="case-disclosure"><summary>О материале <span aria-hidden="true">↗</span></summary><p>Материал ещё готовится. Полный текст появится после проверки и редакторского согласования.</p></details></div></article>)}</div>
+      <div id="materials-list" class="articles-grid">{articles.map(([tag, title, excerpt], index) => <article class="article-card icon-host"><MediaPreview label={tag} index={String(index + 1).padStart(2, '0')} kind="article" /><div class="article-body"><div class="article-top"><span>{tag}</span><span aria-hidden="true">0{index + 1}</span></div><h3>{title}</h3><p class="article-excerpt">{excerpt}</p><span class="article-state">Планируемая тема · ещё не опубликовано</span><details class="case-disclosure"><summary>О материале</summary><p>Материал ещё готовится. Полный текст появится после проверки и редакторского согласования.</p></details></div></article>)}</div>
     </div></section>
+    -->
 
     <section id="resource" class="section container" aria-labelledby="resource-title">
-      <div class="lead-magnet"><div><p class="eyebrow">НАЧНЁМ С ВАШЕЙ ЗАДАЧИ</p><h2 id="resource-title">Подобрать AI-агента<br />под вашу задачу</h2><p>Какой процесс отнимает время? Что хочется изменить? Начните с нескольких вопросов.</p></div><div class="lead-action"><GradientButton className="gradient-button--split-contrast gradient-button--split-long" label="Пройти короткий бриф" splitAfter={2} href="#brief" /><span>Пока доступен пример вопросов</span></div></div>
-      <details id="brief" class="brief-panel"><summary>Короткий бриф — предварительная структура</summary><div><p>Ответы пока не собираются и никуда не отправляются. Эти вопросы помогут подготовиться к разговору.</p><ol><li>Какую задачу вы хотите решить?</li><li>Как этот процесс устроен сейчас?</li><li>Какие документы, данные и сервисы уже есть?</li><li>По каким признакам вы поймёте, что решение работает?</li></ol><a class="text-link" href="#contact">Перейти к контакту <span aria-hidden="true">↗</span></a></div></details>
+      <div class="lead-magnet"><div><p class="eyebrow">НАЧНЁМ С ВАШЕЙ ЗАДАЧИ</p><h2 id="resource-title">Подобрать AI-агента<br />под вашу задачу</h2><p>Какой процесс отнимает время? Что хочется изменить? Начните с нескольких вопросов.</p></div><div class="lead-action"><Cta label="Пройти короткий бриф" href="#brief" /><span>Опишите процесс и желаемый результат</span></div></div>
+      <details id="brief" class="brief-panel"><summary data-event="brief_start">Короткий бриф</summary><div><LeadForm kind="brief" /></div></details>
     </section>
 
     <section id="about" class="section about-section" aria-labelledby="about-title">
@@ -97,9 +126,11 @@ import { featuredProjects, agentGroups, services, processSteps, articles } from 
         <div class="about-copy">
           <p class="eyebrow"><span class="type-icon icon-outline" aria-hidden="true"><Icon name="spark" /></span>06 / ОБО МНЕ</p>
           <h2 id="about-title">Виктор.<br /><span class="muted">От задачи к продукту.</span></h2>
-          <p class="large-text">AI-агенты, AI-сервисы, сайты и автоматизация.</p>
-          <p>Здесь появится краткий рассказ обо мне: опыт, моя роль в проектах и подход к разработке. Факты и фотографии будут добавлены после согласования.</p>
-          <a class="text-link" href="#process">Посмотреть подход к работе <span aria-hidden="true">↗</span></a>
+          <p class="large-text">Разрабатываю AI-агентов, AI-сервисы и автоматизацию для бизнеса.</p>
+          <p>Работаю от задачи, а не от технологии: сначала понимаю, что нужно упростить, потом подбираю инструменты.</p>
+          <p>Создаю прототипы и MVP, довожу решения до проверяемого рабочего сценария. В портфолио — AI-консультанты, автоматизация процессов, агентские системы и веб-продукты.</p>
+          <p>Использую AI-инструменты разработки как часть инженерного процесса. Не приписываю проектам неподтверждённые метрики, клиентов или сроки: каждый статус — production, demo, MVP или prototype — указан честно.</p>
+          <a class="text-link" href="#process">Посмотреть подход к работе</a>
         </div>
         <figure class="theme-photo about-visual">
           <div class="theme-photo-frame">
@@ -112,8 +143,12 @@ import { featuredProjects, agentGroups, services, processSteps, articles } from 
 
     <section id="contact" class="section container" aria-labelledby="contact-title"><div class="contact-panel">
       <div><p class="eyebrow">ЕСТЬ ИДЕЯ?</p><h2 id="contact-title">Обсудим<br />вашу задачу</h2><p>Расскажите, что хотите создать<br />или упростить в своей работе.</p></div>
-      <div class="contact-options"><details class="contact-option"><summary>Telegram <span aria-hidden="true">↗</span></summary><p>Личная ссылка будет добавлена после подтверждения контакта Виктора.</p></details><details class="contact-option"><summary>Написать сообщение <span aria-hidden="true">↗</span></summary><p>Форма заявки будет подключена на следующем этапе. Сейчас сообщения не отправляются.</p><p>Для обращения подготовьте описание задачи и удобный способ связи.</p></details><p class="contact-caption">Каналы связи пока готовятся к подключению.</p></div>
+      <div class="contact-options">
+        <div class="contact-links"><Cta href={contact.telegram} target="_blank" rel="noopener noreferrer" data-event="telegram_click" label="Написать в Telegram" /><Cta href={'mailto:' + contact.email} data-event="email_click" label={contact.email} /></div>
+        <LeadForm kind="request" />
+      </div>
     </div></section>
+    <AiConsultant />
   </main>
   <SiteFooter />
 </BaseLayout>

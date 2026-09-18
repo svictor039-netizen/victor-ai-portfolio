@@ -1,18 +1,23 @@
 ---
+import VMark from './VMark.astro';
+import { contact } from '../config/contact';
 const path = Astro.url.pathname;
 const navigation = [
-  ['Проекты', '/projects/'], ['AI-агенты', '/#agents'], ['Услуги', '/#services'],
-  ['Блог', '/#materials'], ['Обо мне', '/#about'],
+  ['Проекты', '/projects/'],
+  ['AI-агенты', '/#agents'],
+  ['Услуги', '/#services'],
+  ['Форматы', '/#formats'],
+  ['Обо мне', '/#about'],
 ];
 ---
 <header class="site-header">
   <div class="container header-inner">
-    <a href="/" class="brand icon-host" aria-label="Виктор — на главную"><span class="brand-mark icon-outline icon-spark" aria-hidden="true">v<span>↗</span></span><span>Виктор<span class="brand-subtitle">AI · DEVELOPMENT</span></span></a>
+    <a href="/" class="brand icon-host" aria-label="Виктор — на главную"><VMark /><span>Виктор<span class="brand-subtitle">AI · DEVELOPMENT</span></span></a>
     <button class="theme-toggle" type="button" aria-label="Светлая тема" aria-pressed="false" hidden><span class="theme-sun" aria-hidden="true">☀</span><span class="theme-moon" aria-hidden="true">☾</span></button>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" hidden>Меню <span aria-hidden="true">+</span></button>
     <nav id="main-navigation" aria-label="Основная навигация">
       {navigation.map(([label, href]) => <a href={href} aria-current={href === '/projects/' && path.startsWith('/projects') ? 'page' : undefined}>{label}</a>)}
-      <a href="/#contact" class="button button-dark header-cta">Обсудить задачу <span aria-hidden="true">↗</span></a>
+      <a href="/#contact" data-event="contact_click">{contact.primaryCta}</a>
     </nav>
   </div>
 </header>

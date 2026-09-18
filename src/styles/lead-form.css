@@ -1,0 +1,21 @@
+.lead-form { margin-top: 24px; min-width: 0; }
+.lead-form fieldset { border: 0; padding: 0; margin: 16px 0 0; min-width: 0; display: grid; gap: 18px; }
+.lead-field { display: grid; gap: 8px; font-size: 1rem; }
+.lead-field input,.lead-field textarea { width: 100%; min-width: 0; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--color-ink); background: var(--surface); font: inherit; }
+.lead-field textarea { resize: vertical; }
+.lead-field input:focus-visible,.lead-field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.lead-consent { display: flex; align-items: start; gap: 10px; font-size: .875rem; line-height: 1.6; }
+.lead-consent input { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); }
+.lead-consent a { text-decoration: underline; }
+.lead-form .lead-status,.lead-form .lead-hint { font-size: .875rem; line-height: 1.6; margin-top: 12px; }
+.lead-form[data-state="error"] .lead-status { font-weight: 600; }
+.lead-form[data-state="success"] .lead-status { color: var(--accent); font-weight: 600; }
+.lead-fallback,.contact-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; }
+.lead-fallback a,.contact-links a { overflow-wrap: anywhere; }
+.lead-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.contact-options { min-width: 0; }
+.lead-form [data-challenge] { min-width: 0; }
+.privacy-copy { max-width: 760px; padding-block: 64px; }
+.privacy-copy p { margin-top: 20px; line-height: 1.7; }
+
+.lead-form .cta { justify-self: start; }
