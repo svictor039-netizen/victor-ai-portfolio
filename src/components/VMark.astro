@@ -1,0 +1,5 @@
+---
+interface Props { size?: 'header' | 'hero' | 'card'; }
+const { size = 'header' } = Astro.props;
+---
+<span class:list={['v-mark', 'icon-outline', `v-mark--${size}`]} aria-hidden="true">v</span>

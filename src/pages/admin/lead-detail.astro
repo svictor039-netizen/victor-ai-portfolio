@@ -1,0 +1,24 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { AdminAuthGuard } from '../../components/admin/AdminAuthGuard';
+import { AdminSidebar } from '../../components/admin/AdminSidebar';
+import { LeadDetailView } from '../../components/admin/LeadDetailView';
+import { getSessionToken, validateSession } from '../../lib/auth';
+
+const token = getSessionToken(Astro.request);
+const session = token ? validateSession(token) : null;
+if (!session) {
+  return Astro.redirect('/admin/login/');
+}
+---
+<AdminLayout title="Lead Detail">
+  <AdminAuthGuard client:only="react">
+    <div class="flex min-h-screen">
+      <AdminSidebar client:load />
+      <div class="flex-1 p-6 lg:p-8">
+        <LeadDetailView leadId={Astro.url.searchParams.get('id') || ''} client:load />
+      </div>
+    </div>
+  </AdminAuthGuard>
+</AdminLayout>

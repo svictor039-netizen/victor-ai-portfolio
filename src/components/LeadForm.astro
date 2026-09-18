@@ -1,0 +1,48 @@
+---
+import Cta from "./Cta";
+import { contact, leadDelivery } from '../config/contact';
+import '../styles/lead-form.css';
+interface Props { kind: 'request' | 'brief'; }
+const { kind } = Astro.props;
+const isBrief = kind === 'brief';
+const enabled = Boolean(leadDelivery.endpoint && leadDelivery.sitekey && leadDelivery.consentConfirmed);
+const fields = isBrief ? [
+  { name: 'task', label: 'Какую задачу хотите решить?', required: true, max: 3000, area: true },
+  { name: 'process', label: 'Как процесс устроен сейчас?', required: true, max: 3000, area: true },
+  { name: 'resources', label: 'Какие данные или сервисы уже есть?', required: true, max: 2000, area: true },
+  { name: 'result', label: 'Какой результат считается успешным?', required: true, max: 2000, area: true },
+  { name: 'deadline', label: 'Желаемый срок (необязательно)', required: false, max: 100, area: false },
+  { name: 'contact', label: 'Контакт: Telegram, email или телефон', required: true, max: 200, area: false },
+] : [
+  { name: 'name', label: 'Имя', required: true, max: 100, area: false },
+  { name: 'contact', label: 'Контакт: Telegram, email или телефон', required: true, max: 200, area: false },
+  { name: 'task', label: 'Описание задачи', required: true, max: 3000, area: true },
+];
+---
+<form method="post" class="lead-form" data-lead-form data-kind={kind} data-endpoint={enabled ? leadDelivery.endpoint : ''} data-sitekey={enabled ? leadDelivery.sitekey : ''} aria-label={isBrief ? 'Короткий бриф' : 'Заявка на оценку проекта'}>
+  <p class="lead-hint">Обязательные поля отмечены *. Не указывайте пароли и конфиденциальные документы.</p>
+  <fieldset>
+    {fields.map(field => <label class="lead-field" for={kind + '-' + field.name}>
+      <span>{field.label}{field.required && ' *'}</span>
+      {field.area
+        ? <textarea id={kind + '-' + field.name} name={field.name} rows="3" required={field.required} maxlength={field.max} />
+        : <input id={kind + '-' + field.name} name={field.name} type="text" required={field.required} maxlength={field.max} autocomplete={field.name === 'name' ? 'name' : 'off'} />}
+    </label>)}
+    <div class="lead-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+    <label class="lead-consent">
+      <input type="checkbox" name="consent" required />
+      <span>Согласен(на) на обработку указанных данных для ответа на обращение. <a href="/privacy/" target="_blank" rel="noopener noreferrer">Условия обработки данных</a> *</span>
+    </label>
+    <div data-challenge></div>
+    <Cta type="submit" disabled data-submit label={isBrief ? 'Отправить бриф' : 'Отправить заявку'} />
+  </fieldset>
+  <p class="lead-status" data-status role="status" aria-live="polite" aria-atomic="true">{enabled ? 'Для отправки включите JavaScript и пройдите проверку.' : 'Отправка через сайт сейчас недоступна. Напишите в Telegram или на email — ссылки ниже.'}</p>
+  <div class="lead-fallback">
+    <Cta href={contact.telegram} target="_blank" rel="noopener noreferrer" label="Написать в Telegram" />
+    <Cta href={'mailto:' + contact.email} label={contact.email} />
+  </div>
+</form>
+<script>
+  import { initLeadForms } from '../scripts/lead-forms';
+  initLeadForms();
+</script>

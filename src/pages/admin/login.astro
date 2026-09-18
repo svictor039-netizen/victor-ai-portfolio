@@ -1,0 +1,86 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Login">
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-sm bg-surface border border-border rounded-2xl p-8 shadow-lg">
+      <div class="flex items-center gap-2 text-accent font-semibold mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Back Office</span>
+      </div>
+      <p class="text-sm text-muted-foreground mb-6">Victor AI Portfolio — вход в панель управления</p>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="username" class="block text-sm font-medium mb-1.5">Логин</label>
+          <input
+            id="username"
+            type="text"
+            required
+            class="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="admin"
+          />
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium mb-1.5">Пароль</label>
+          <input
+            id="password"
+            type="password"
+            required
+            class="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="••••"
+          />
+        </div>
+        <p id="login-error" class="text-sm text-destructive hidden"></p>
+        <button
+          type="submit"
+          class="w-full px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+        >
+          Войти
+        </button>
+      </form>
+
+      <a href="/" class="block mt-6 text-center text-sm text-muted-foreground hover:text-foreground transition-colors">← На сайт</a>
+    </div>
+  </div>
+
+  <script>
+    const formEl = document.getElementById('login-form');
+    const errorEl = document.getElementById('login-error');
+    const usernameEl = document.getElementById('username') as HTMLInputElement;
+    const passwordEl = document.getElementById('password') as HTMLInputElement;
+
+    if (formEl) {
+      formEl.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (errorEl) errorEl.classList.add('hidden');
+        try {
+          const res = await fetch('/api/auth/login/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: usernameEl?.value || '',
+              password: passwordEl?.value || '',
+            }),
+          });
+          const data = await res.json();
+          if (res.ok && data.ok) {
+            window.location.href = '/admin/dashboard/';
+          } else {
+            if (errorEl) {
+              errorEl.textContent = data.code === 'not_configured'
+                ? 'Auth не настроен на сервере.'
+                : 'Неверный логин или пароль.';
+              errorEl.classList.remove('hidden');
+            }
+          }
+        } catch {
+          if (errorEl) {
+            errorEl.textContent = 'Ошибка соединения.';
+            errorEl.classList.remove('hidden');
+          }
+        }
+      });
+    }
+  </script>
+</AdminLayout>

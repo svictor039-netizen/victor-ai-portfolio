@@ -1,3 +1,5 @@
+import Cta from './Cta';
+import { contact } from '../config/contact';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import type { ServiceOffer } from '@/data/home';
 import { cn } from '@/lib/utils';
@@ -100,7 +102,7 @@ export default function ServiceFlipCard({ service }: { service: ServiceOffer }) 
               ))}
             </ul>
             <span className="text-link service-more">
-              Подробнее <span aria-hidden="true">→</span>
+              Подробнее
             </span>
           </button>
         </div>
@@ -124,9 +126,7 @@ export default function ServiceFlipCard({ service }: { service: ServiceOffer }) 
             <p className="service-result">{service.result}</p>
           </div>
           <div className="service-back-actions">
-            <a className="button button-dark service-discuss" href="#contact" tabIndex={flipped ? 0 : -1} onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()}>
-              Обсудить задачу <span aria-hidden="true">↗</span>
-            </a>
+            <Cta label={contact.primaryCta} href="/#contact" tabIndex={flipped ? 0 : -1} onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} />
             <button type="button" className="service-flip-back" tabIndex={flipped ? 0 : -1} onClick={toggle}>
               Назад
             </button>

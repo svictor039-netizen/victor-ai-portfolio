@@ -1,1 +1,19 @@
-<footer class="site-footer container"><a href="/" class="footer-brand">Виктор <span>AI · WEB · АВТОМАТИЗАЦИЯ</span></a><nav aria-label="Навигация в подвале"><a href="/projects/">Проекты</a><a href="/#agents">AI-агенты</a><a href="/#contact">Контакт</a></nav><span class="footer-note">Первая версия · в разработке</span></footer>
+---
+import Cta from "./Cta";
+import { contact } from '../config/contact';
+---
+<footer class="site-footer container">
+  <a href="/" class="footer-brand">Виктор <span>AI · АГЕНТЫ · СЕРВИСЫ · АВТОМАТИЗАЦИЯ</span></a>
+  <nav aria-label="Навигация в подвале">
+    <a href="/projects/">Проекты</a>
+    <a href="/#agents">AI-агенты</a>
+    <a href="/#services">Услуги</a>
+    <a href="/#contact" data-event="contact_click">Контакт</a>
+    <a href="/privacy/">Политика данных</a>
+  </nav>
+  <p class="footer-contact">
+    <Cta href={contact.telegram} target="_blank" rel="noopener noreferrer" data-event="telegram_click" label="Telegram" />
+    <span aria-hidden="true">·</span>
+    <Cta href={'mailto:' + contact.email} data-event="email_click" label={contact.email} />
+  </p>
+</footer>

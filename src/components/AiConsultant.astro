@@ -1,0 +1,49 @@
+---
+const endpoint = import.meta.env.PUBLIC_CONSULT_ENDPOINT?.trim() || '';
+---
+<div class="ai-consultant" role="region" aria-label="AI-консультант" data-ai-endpoint={endpoint}>
+  <button class="ai-consultant-bubble" data-ai-bubble aria-label="Открыть AI-консультант" aria-expanded="false" aria-controls="ai-consultant-panel">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  <div id="ai-consultant-panel" class="ai-consultant-panel" data-ai-panel hidden>
+    <div class="ai-consultant-header">
+      <h3 class="ai-consultant-title">AI-консультант</h3>
+      <button class="ai-consultant-close" data-ai-close aria-label="Закрыть">×</button>
+    </div>
+
+    <div class="ai-consultant-messages" data-ai-messages>
+      <div class="ai-consultant-msg ai-consultant-msg--system" data-ai-welcome>
+        Привет! Я помогу подобрать решение из портфолио Виктора. Что хотите упростить или автоматизировать?
+      </div>
+    </div>
+
+    <div class="ai-consultant-inputarea">
+      <textarea
+        class="ai-consultant-input"
+        data-ai-input
+        placeholder="Опишите задачу…"
+        rows="1"
+        aria-label="Сообщение"
+      ></textarea>
+      <button class="ai-consultant-send" data-ai-send aria-label="Отправить">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ai-consultant-footer">
+      <button class="ai-consultant-clear" data-ai-clear type="button">Очистить</button>
+      <button class="ai-consultant-handoff" data-ai-handoff type="button">Перейти к заявке</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initAiConsultant } from '../scripts/ai-consultant';
+  initAiConsultant();
+</script>

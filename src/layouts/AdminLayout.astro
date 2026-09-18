@@ -1,0 +1,18 @@
+---
+import '../styles/global.css';
+const { title = 'Back Office' } = Astro.props;
+---
+<!doctype html>
+<html lang="ru" class="dark" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#030712" />
+    <title>{title} — Victor AI Portfolio</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <slot />
+  </body>
+</html>

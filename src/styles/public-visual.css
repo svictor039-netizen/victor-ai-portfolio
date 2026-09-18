@@ -1,0 +1,207 @@
+/* One public nebula system shared by every route, with sparse decorative shooting stars. */
+.public-site {
+  --ambient-violet: #7560b936;
+  --ambient-cyan: #6581c426;
+  --ambient-blue: #426abb33;
+  --ambient-cloud: #8c75be1f;
+  --interaction-glow: 0 6px 24px color-mix(in srgb, var(--accent-violet) 17%, transparent), 0 0 16px color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  --glow-hover: var(--interaction-glow);
+  --edge-highlight: color-mix(in srgb, var(--accent-cyan) 55%, var(--accent-violet));
+  position: relative;
+  isolation: isolate;
+  background-color: #080b22;
+  background-image: none;
+}
+[data-theme='light'] .public-site {
+  --ambient-violet: #b8a8e923;
+  --ambient-cyan: #b7d3f026;
+  --ambient-blue: #a8cfff30;
+  --ambient-cloud: #d0c4eb21;
+  background-color: #f8f9fc;
+}
+.public-site::before {
+  content: '';
+  position: fixed;
+  inset: -6%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 32% at 12% 22%, var(--ambient-cloud), transparent 78%),
+    radial-gradient(ellipse 66% 48% at 0% 38%, var(--ambient-violet), transparent 76%),
+    radial-gradient(ellipse 45% 58% at 93% 12%, var(--ambient-blue), transparent 78%),
+    radial-gradient(ellipse 56% 28% at 80% 68%, var(--ambient-cloud), transparent 78%),
+    radial-gradient(ellipse 68% 50% at 100% 88%, var(--ambient-violet), transparent 76%),
+    radial-gradient(ellipse 60% 44% at 24% 100%, var(--ambient-cyan), transparent 78%);
+  animation: ambient-drift 64s ease-in-out infinite alternate;
+}
+/* Dark reference: visible blue cloud banks and violet pockets, with navy gaps.
+   Keep the light palette and its original wash geometry unchanged. */
+:root:not([data-theme='light']) .public-site::before {
+  background:
+    radial-gradient(ellipse 24% 34% at 48% 48%, #080b224d, transparent 82%),
+    radial-gradient(ellipse 22% 18% at 10% 16%, #6c8cd142, transparent 78%),
+    radial-gradient(ellipse 40% 50% at 4% 22%, #315ec58c, transparent 78%),
+    radial-gradient(ellipse 22% 34% at 26% 4%, #5667c663, transparent 80%),
+    radial-gradient(ellipse 30% 24% at 33% 34%, #5e45ba59, transparent 78%),
+    radial-gradient(ellipse 24% 40% at 73% 13%, #4e2d945c, transparent 80%),
+    radial-gradient(ellipse 32% 23% at 86% 47%, #7541b563, transparent 80%),
+    radial-gradient(ellipse 20% 35% at 97% 72%, #6849bb70, transparent 78%),
+    radial-gradient(ellipse 40% 33% at 73% 98%, #552d9f7a, transparent 80%),
+    radial-gradient(ellipse 22% 18% at 60% 79%, #8871c533, transparent 82%),
+    radial-gradient(ellipse 42% 28% at 13% 89%, #374ba166, transparent 80%);
+}
+/* A sparse, fixed star field: small distant points, fewer near points, three soft lights.
+   Non-repeating gradients keep density bounded even on wide screens. */
+.public-site::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 7% 17%, #c2cbef70 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 18% 43%, #9caad84d 0 .5px, transparent 1.2px),
+    radial-gradient(circle at 26% 8%, #b3b5e359 0 .6px, transparent 1.3px),
+    radial-gradient(circle at 35% 72%, #b4c3e347 0 .5px, transparent 1.2px),
+    radial-gradient(circle at 44% 29%, #abbce047 0 .5px, transparent 1.2px),
+    radial-gradient(circle at 55% 89%, #b8b3dd59 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 63% 12%, #aebee359 0 .5px, transparent 1.3px),
+    radial-gradient(circle at 72% 52%, #c6c2e84d 0 .5px, transparent 1.2px),
+    radial-gradient(circle at 83% 32%, #abb9e359 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 95% 61%, #bbc9e870 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 14% 91%, #a8b8d94d 0 .5px, transparent 1.2px),
+    radial-gradient(circle at 89% 92%, #b5b1df59 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 3% 62%, #bec9ee94 0 1px, #839ed924 1.6px, transparent 3px),
+    radial-gradient(circle at 23% 62%, #b8b2e878 0 .9px, transparent 2px),
+    radial-gradient(circle at 41% 5%, #b4c8ee85 0 .8px, transparent 1.8px),
+    radial-gradient(circle at 59% 39%, #bdb3e878 0 .8px, transparent 1.8px),
+    radial-gradient(circle at 77% 82%, #b4c8ee85 0 1px, transparent 2px),
+    radial-gradient(circle at 97% 23%, #c1b6e894 0 1px, transparent 2px),
+    radial-gradient(circle at 9% 34%, #e3dcffd9 0 1.4px, #a288eaa6 2.5px, #8063cc38 9px, transparent 25px),
+    radial-gradient(circle at 91% 47%, #d1e2ffdb 0 1.5px, #819ee2a6 2.5px, #587cce38 10px, transparent 28px),
+    radial-gradient(circle at 68% 94%, #e0d3ffd1 0 1.3px, #a083d994 2.5px, #8963c733 9px, transparent 24px),
+    radial-gradient(circle at 5% 81%, #c8c8ec78 0 .7px, transparent 1.6px),
+    radial-gradient(circle at 12% 6%, #a5bde966 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 16% 56%, #c2c8e68c 0 .9px, transparent 1.8px),
+    radial-gradient(circle at 21% 25%, #a6b2dd59 0 .5px, transparent 1.3px),
+    radial-gradient(circle at 29% 87%, #c2b6df80 0 .8px, transparent 1.6px),
+    radial-gradient(circle at 32% 49%, #b8c8ec66 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 38% 18%, #bcc0e859 0 .5px, transparent 1.3px),
+    radial-gradient(circle at 46% 94%, #c8c3ed99 0 1.1px, transparent 2px),
+    radial-gradient(circle at 51% 65%, #bac3ea59 0 .6px, transparent 1.4px),
+    radial-gradient(circle at 57% 22%, #b7bce570 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 64% 71%, #c3bce880 0 .9px, transparent 1.8px),
+    radial-gradient(circle at 69% 5%, #c1c9e970 0 .7px, transparent 1.5px),
+    radial-gradient(circle at 76% 36%, #b7c4e94d 0 .5px, transparent 1.3px),
+    radial-gradient(circle at 81% 65%, #b9b1de70 0 .7px, transparent 1.6px),
+    radial-gradient(circle at 86% 9%, #c9c9ee94 0 1px, transparent 2px),
+    radial-gradient(circle at 93% 79%, #c4baeb80 0 .8px, transparent 1.7px);
+  background-repeat: no-repeat;
+}
+[data-theme='light'] .public-site::after { content: none; }
+/* Body isolation keeps both negative layers above its base, below all content.
+   Nebula/static stars: -2; shooting stars: -1; public content: auto/0 and above. */
+.public-site .shooting-star-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  --meteor-cyan: #7ce9ff;
+  --meteor-blue: #88b4ff;
+  --meteor-violet: #ba9cff;
+  --meteor-head: #e4f5ff;
+}
+[data-theme='light'] .public-site .shooting-star-layer {
+  --meteor-cyan: #176d9c;
+  --meteor-blue: #305cba;
+  --meteor-violet: #7041ad;
+  --meteor-head: #283d89;
+}
+.shooting-star {
+  --meteor-tint: var(--meteor-cyan);
+  --meteor-length: clamp(150px, 24vw, 280px);
+  --meteor-width: 2px;
+  --meteor-opacity: .95;
+  --meteor-distance: min(60vw, 65vh);
+  --meteor-x: var(--meteor-distance);
+  --meteor-angle: 45deg;
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  animation: shooting-star-flight 36s linear 1s infinite;
+}
+.shooting-star:nth-child(2) {
+  --meteor-tint: var(--meteor-violet);
+  --meteor-length: clamp(180px, 28vw, 340px);
+  --meteor-width: 2.8px;
+  --meteor-opacity: 1;
+  --meteor-x: calc(-1 * var(--meteor-distance));
+  --meteor-angle: 135deg;
+  top: 8%;
+  left: 92%;
+  animation-delay: 13s;
+}
+.shooting-star:nth-child(3) {
+  --meteor-tint: var(--meteor-blue);
+  --meteor-length: clamp(130px, 20vw, 230px);
+  --meteor-width: 1.6px;
+  --meteor-opacity: .85;
+  top: 28%;
+  left: 20%;
+  animation-delay: 25s;
+}
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: var(--meteor-length);
+  height: var(--meteor-width);
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--meteor-tint) 55%, transparent) 35%, var(--meteor-tint) 85%, var(--meteor-head));
+  filter: drop-shadow(0 0 4px var(--meteor-tint));
+}
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--meteor-width) * 2);
+  height: calc(var(--meteor-width) * 2);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--meteor-head);
+  box-shadow: 0 0 7px var(--meteor-tint), 0 0 15px color-mix(in srgb, var(--meteor-tint) 55%, transparent);
+}
+@keyframes shooting-star-flight {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(var(--meteor-angle)); }
+  1.5%, 7% { opacity: var(--meteor-opacity); }
+  10%, 100% { opacity: 0; transform: translate3d(var(--meteor-x), var(--meteor-distance), 0) rotate(var(--meteor-angle)); }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .public-site .shooting-star-layer { display: none; }
+  .shooting-star { animation: none; }
+}
+@keyframes ambient-drift {
+  from { transform: translate3d(-1%, -1%, 0); }
+  to { transform: translate3d(1%, 2%, 0); }
+}
+.public-site :is(.section-tinted, .section-alternate) { background: transparent; }
+.public-site :is(.contact-panel, .lead-magnet) {
+  background: linear-gradient(135deg, var(--ambient-violet), transparent 55%, var(--ambient-cyan)), color-mix(in srgb, var(--surface) 86%, transparent);
+  border-color: var(--edge-highlight);
+  box-shadow: var(--card-shadow), 0 0 48px var(--ambient-violet);
+  backdrop-filter: blur(14px);
+}
+.public-site :is(.service-card-v2, .format-card):is(:hover, :focus-within) {
+  border-color: var(--edge-highlight);
+  box-shadow: var(--card-shadow), var(--interaction-glow);
+}
+.agent-actions { gap: 12px; }
+.project-actions { align-items: start; }
+.format-card .cta { align-self: start; margin-top: auto; }
+@media (prefers-reduced-motion: reduce) { .public-site::before { animation: none; transform: none; } }
+@media (forced-colors: active) { .public-site::before, .public-site::after { content: none; } }

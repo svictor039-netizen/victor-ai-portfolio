@@ -1,0 +1,48 @@
+---
+import Cta from "./Cta";
+import { contact } from '../config/contact';
+import Icon from './Icon.astro';
+import type { ServiceOffer } from '../data/home';
+
+interface Props {
+  service: ServiceOffer;
+}
+
+const { service } = Astro.props;
+---
+
+<article class="service-card-v2 icon-host" data-accent={service.accent} data-service-name={service.name}>
+  <div class="service-card-front">
+    <div class="service-top">
+      <span class:list={['type-icon', 'icon-outline', service.spark && 'icon-spark']}>
+        <Icon name={service.icon} />
+      </span>
+      <span class="service-number">{service.number}</span>
+    </div>
+    <h3>{service.name}</h3>
+    <p class="service-description">{service.description}</p>
+    <ul class="service-points">
+      {service.front.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+
+    <details class="service-reveal">
+      <summary>
+        <span>Что вы получаете</span>
+      </summary>
+      <div class="service-reveal-inner">
+        <ul class="service-points">
+          {service.back.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+        <p class="service-result">{service.result}</p>
+      </div>
+    </details>
+
+    <div class="service-card-actions">
+      <Cta href="/#contact" data-event="contact_click" label={contact.primaryCta} />
+    </div>
+  </div>
+</article>

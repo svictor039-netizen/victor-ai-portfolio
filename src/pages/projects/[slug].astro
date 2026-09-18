@@ -1,8 +1,9 @@
 ---
+import Cta from "../../components/Cta";
+import { contact } from '../../config/contact';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import GradientButton from '../../components/kokonutui/gradient-button';
 import { projects, getProject } from '../../data/projects';
 
 export function getStaticPaths() {
@@ -39,9 +40,9 @@ if (!project) throw new Error(`Unknown project: ${Astro.params.slug}`);
     <section class="case-section" aria-labelledby={`${project.slug}-cta`}>
       <h2 id={`${project.slug}-cta`}>Что дальше</h2>
       <div class="project-actions">
-        <GradientButton label="Обсудить похожую задачу" href="/#contact" />
-        {project.liveUrl && <a class="button" href={project.liveUrl} rel="noopener noreferrer" target="_blank">Открыть проект <span aria-hidden="true">↗</span></a>}
-        <a class="text-link" href="/projects/">Ко всем проектам <span aria-hidden="true">←</span></a>
+        <Cta label={contact.caseCta} href="/#contact" data-event="case_cta_click" />
+        {project.liveUrl && <Cta href={project.liveUrl} rel="noopener noreferrer" target="_blank" label="Открыть проект" />}
+        <a class="text-link" href="/projects/">Ко всем проектам</a>
       </div>
     </section>
   </main>
