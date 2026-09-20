@@ -12,8 +12,10 @@ const ALLOWED_ORIGINS = ['http://localhost:4321', 'http://127.0.0.1:4321'];
 const env = {
   // Lead worker config
   ALLOWED_ORIGINS: ALLOWED_ORIGINS.join(','),
-  RESEND_API_KEY: '',
-  MAIL_FROM: '',
+  UNISENDER_API_KEY: '',
+  UNISENDER_SENDER_EMAIL: '',
+  UNISENDER_SENDER_NAME: '',
+  UNISENDER_LIST_ID: '',
   TURNSTILE_SECRET_KEY: '',
   LEAD_CONSENT_CONFIRMED: 'true',
 
@@ -95,7 +97,7 @@ const server = createServer(async (req, res) => {
 
     // For local dev, skip Turnstile and email if keys are empty
     const devEnv = { ...env };
-    if (!devEnv.RESEND_API_KEY || !devEnv.MAIL_FROM || !devEnv.TURNSTILE_SECRET_KEY) {
+    if (!devEnv.UNISENDER_API_KEY || !devEnv.TURNSTILE_SECRET_KEY) {
       // Mock response for local testing
       const corsOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : '';
       const responseHeaders = {

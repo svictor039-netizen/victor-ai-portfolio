@@ -5,12 +5,13 @@
  */
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
-const DB_DIR = join(process.cwd(), 'data');
+const DB_PATH = process.env.DATABASE_PATH || join(process.cwd(), 'data', 'victor.db');
+const DB_DIR = dirname(DB_PATH);
 mkdirSync(DB_DIR, { recursive: true });
 
-const db = new DatabaseSync(join(DB_DIR, 'victor.db'));
+const db = new DatabaseSync(DB_PATH);
 
 function init() {
   db.exec(`
@@ -107,7 +108,7 @@ function init() {
 
 function seed() {
   const integrations = [
-    { name: 'email', display_name: 'Email (Resend)', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
+    { name: 'email', display_name: 'Email (Unisender)', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
     { name: 'turnstile', display_name: 'Cloudflare Turnstile', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
     { name: 'db', display_name: 'SQLite / DB', configured: 1, healthy: 1, environment: 'Node server', last_check: now() },
   ];

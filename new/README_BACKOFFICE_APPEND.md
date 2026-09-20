@@ -139,7 +139,7 @@ The goal is not just to count traffic/clicks. The goal is to understand which so
 
 ## Logs / health
 
-The Back Office should expose safe operational status for site, API/Worker, LLM provider, database, Resend/email, Turnstile, Google integrations, Yandex integrations, failed lead submissions, and AI fallback/errors.
+The Back Office should expose safe operational status for site, API/Worker, LLM provider, database, Unisender/email, Turnstile, Google integrations, Yandex integrations, failed lead submissions, and AI fallback/errors.
 Secrets and unnecessary PII must never appear in logs.
 
 ## Secrets

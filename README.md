@@ -23,7 +23,7 @@
 - [x] Добавить success/error состояния форм.
 - [x] Проверить CTA на всех ключевых экранах.
 - [x] Заменить основной CTA на «Получить предварительную оценку проекта».
-- [ ] Для рабочей отправки: настроить env `PUBLIC_LEAD_ENDPOINT`, `PUBLIC_TURNSTILE_SITE_KEY`, `PUBLIC_LEAD_CONSENT_CONFIRMED` и секреты Worker (`RESEND_API_KEY`, `MAIL_FROM`, `TURNSTILE_SECRET_KEY`).
+- [ ] Для рабочей отправки: настроить env `PUBLIC_LEAD_ENDPOINT`, `PUBLIC_TURNSTILE_SITE_KEY`, `PUBLIC_LEAD_CONSENT_CONFIRMED` и секреты Worker (`UNISENDER_API_KEY`, `TURNSTILE_SECRET_KEY`).
 - [x] Back Office: собственная панель на Astro + React + Tailwind, localStorage MVP.
 
 ### Шаг 2. Сфокусировать позиционирование — P1
@@ -151,8 +151,11 @@
 - `PUBLIC_LEAD_CONSENT_CONFIRMED=true` — после утверждения privacy
 
 **В Cloudflare Worker (`server/lead-worker.mjs`):**
-- `RESEND_API_KEY` — API-ключ Resend
-- `MAIL_FROM` — подтверждённый адрес отправителя
+- `UNISENDER_API_KEY` — API-ключ Unisender
+- `UNISENDER_SENDER_EMAIL` — подтверждённый адрес отправителя (default `info@donskoe39.ru`)
+- `UNISENDER_SENDER_NAME` — имя отправителя (default `пос.Донское`)
+- `UNISENDER_LIST_ID` — ID списка Unisender (default `1`)
+- `LEAD_RECIPIENT` — адрес получателя заявок
 - `TURNSTILE_SECRET_KEY` — секретный ключ Turnstile
 - `ALLOWED_ORIGINS` — разрешённые origins через запятую
 - `LEAD_CONSENT_CONFIRMED=true` — после утверждения privacy
@@ -191,7 +194,7 @@
 Перед публикацией:
 
 - [x] Telegram работает (реальная ссылка).
-- [x] LeadForm UI и fallback на Telegram/email работают. Production delivery требует настройки PUBLIC_LEAD_ENDPOINT и Worker secrets (RESEND_API_KEY, MAIL_FROM, TURNSTILE_SECRET_KEY).
+- [x] LeadForm UI и fallback на Telegram/email работают. Production delivery требует настройки PUBLIC_LEAD_ENDPOINT и Worker secrets (UNISENDER_API_KEY, TURNSTILE_SECRET_KEY).
 - [x] Бриф работает (встроен в LeadForm).
 - [x] «Обо мне» заполнен.
 - [x] Позиционирование сфокусировано.
@@ -349,7 +352,7 @@ The goal is not just to count traffic/clicks. The goal is to understand which so
 
 ### Logs / health
 
-The Back Office should expose safe operational status for site, API/Worker, LLM provider, database, Resend/email, Turnstile, Google integrations, Yandex integrations, failed lead submissions, and AI fallback/errors.
+The Back Office should expose safe operational status for site, API/Worker, LLM provider, database, Unisender/email, Turnstile, Google integrations, Yandex integrations, failed lead submissions, and AI fallback/errors.
 Secrets and unnecessary PII must never appear in logs.
 
 ### Secrets
