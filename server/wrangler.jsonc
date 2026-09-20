@@ -5,11 +5,11 @@
   "workers_dev": true,
   "observability": { "enabled": false },
   "vars": {
-    "ALLOWED_ORIGINS": "https://victor-ai-portfolio.svictor-039.chatgpt.site",
+    "ALLOWED_ORIGINS": "https://ailabstudio.ru,https://www.ailabstudio.ru",
     "UNISENDER_SENDER_EMAIL": "info@donskoe39.ru",
     "UNISENDER_SENDER_NAME": "пос.Донское",
     "UNISENDER_LIST_ID": "1",
-    "LEAD_RECIPIENT": "",
-    "LEAD_CONSENT_CONFIRMED": "false"
+    "LEAD_RECIPIENT": "vslpk@inbox.ru",
+    "LEAD_CONSENT_CONFIRMED": "true"
   }
 }
