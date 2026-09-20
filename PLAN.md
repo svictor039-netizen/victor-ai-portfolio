@@ -101,7 +101,7 @@
 ## 4. Главные проблемы
 
 ### P0 — для полной конверсии требуется
-1. Настроить env `PUBLIC_LEAD_ENDPOINT`, `PUBLIC_TURNSTILE_SITE_KEY` и секреты Worker (`RESEND_API_KEY`, `MAIL_FROM`, `TURNSTILE_SECRET_KEY`).
+1. Настроить env `PUBLIC_LEAD_ENDPOINT`, `PUBLIC_TURNSTILE_SITE_KEY` и секреты Worker (`UNISENDER_API_KEY`, `TURNSTILE_SECRET_KEY`).
 
 ### P1 — выполнено
 2–9. Позиционирование, форматы работы, структура кейсов, «Обо мне» — доработаны.

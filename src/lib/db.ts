@@ -108,7 +108,7 @@ function init() {
 
 function seed() {
   const integrations = [
-    { name: 'email', display_name: 'Email (Resend)', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
+    { name: 'email', display_name: 'Email (Unisender)', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
     { name: 'turnstile', display_name: 'Cloudflare Turnstile', configured: 0, healthy: 0, environment: 'CF Worker', last_check: now() },
     { name: 'db', display_name: 'SQLite / DB', configured: 1, healthy: 1, environment: 'Node server', last_check: now() },
   ];

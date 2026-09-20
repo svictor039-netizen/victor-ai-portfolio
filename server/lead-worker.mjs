@@ -156,6 +156,62 @@ async function ingestToBackOffice(clean, env, fetcher = fetch) {
   }
 }
 
+const DEFAULT_UNISENDER_SENDER_EMAIL = 'info@donskoe39.ru';
+const DEFAULT_UNISENDER_SENDER_NAME = 'пос.Донское';
+const DEFAULT_UNISENDER_LIST_ID = '1';
+
+function htmlEscape(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function wrapEmailBody(text) {
+  return `<!DOCTYPE html><html><body style="font-family:sans-serif;line-height:1.5;white-space:pre-wrap;">${htmlEscape(text)}</body></html>`;
+}
+
+async function sendEmailViaUnisender({ recipient, subject, text, refKey }, env, fetcher = fetch) {
+  const apiKey = env.UNISENDER_API_KEY;
+  const senderEmail = env.UNISENDER_SENDER_EMAIL || DEFAULT_UNISENDER_SENDER_EMAIL;
+  const senderName = env.UNISENDER_SENDER_NAME || DEFAULT_UNISENDER_SENDER_NAME;
+  const listId = env.UNISENDER_LIST_ID || DEFAULT_UNISENDER_LIST_ID;
+
+  if (!apiKey) return { ok: false, code: 'missing_unisender_api_key' };
+  if (!recipient) return { ok: false, code: 'missing_recipient' };
+
+  const params = new URLSearchParams();
+  params.set('api_key', apiKey);
+  params.set('email', recipient);
+  params.set('sender_name', senderName);
+  params.set('sender_email', senderEmail);
+  params.set('subject', subject);
+  params.set('body', wrapEmailBody(text));
+  params.set('list_id', listId);
+  params.set('error_checking', '1');
+  if (refKey) params.set('ref_key', refKey);
+
+  const response = await fetcher('https://api.unisender.com/ru/api/sendEmail?format=json', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+    signal: AbortSignal.timeout(10000),
+  });
+
+  if (!response.ok) return { ok: false, code: 'delivery', status: response.status };
+
+  const data = await response.json();
+  if (data && (data.error || data.code || data.message)) {
+    return { ok: false, code: 'delivery', detail: String(data.error || data.message || data.code || 'unisender_error') };
+  }
+  if (data && data.result && (data.result.error || data.result.code)) {
+    return { ok: false, code: 'delivery', detail: String(data.result.error || data.result.code || 'unisender_error') };
+  }
+
+  return { ok: true };
+}
+
 export async function handleRequest(request, env, fetcher = fetch) {
   const url = new URL(request.url);
   if (url.pathname === '/api/consult') {
@@ -174,7 +230,7 @@ export async function handleRequest(request, env, fetcher = fetch) {
     return new Response(null, { status: 204, headers });
   }
   if (request.method !== 'POST') return respond(405, 'method');
-  if (!env.RESEND_API_KEY || !env.MAIL_FROM || !env.TURNSTILE_SECRET_KEY || env.LEAD_CONSENT_CONFIRMED !== 'true') return respond(503, 'unavailable');
+  if (!env.UNISENDER_API_KEY || !env.TURNSTILE_SECRET_KEY || env.LEAD_CONSENT_CONFIRMED !== 'true') return respond(503, 'unavailable');
   if (!env.LEAD_RECIPIENT) return respond(503, 'config_error');
   if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return respond(415, 'content_type');
 
@@ -242,22 +298,15 @@ export async function handleRequest(request, env, fetcher = fetch) {
       if (clean.aiHandoff.conversation_summary) text += '\nРезюме диалога: ' + clean.aiHandoff.conversation_summary;
     }
 
-    const email = {
-      from: env.MAIL_FROM,
-      to: [env.LEAD_RECIPIENT],
-      subject: clean.kind === 'brief' ? 'Бриф с сайта Виктора' : 'Заявка на оценку проекта',
+    const subject = clean.kind === 'brief' ? 'Бриф с сайта Виктора' : 'Заявка на оценку проекта';
+    // Stable ref_key across retries; no user-controlled email headers or recipients.
+    const delivery = await sendEmailViaUnisender({
+      recipient: env.LEAD_RECIPIENT,
+      subject,
       text,
-    };
-    // Stable across retries; no user-controlled email headers or recipients.
-    const response = await fetcher('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json', 'Idempotency-Key': 'lead/' + body.requestId },
-      body: JSON.stringify(email),
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) return respond(502, 'delivery');
-    const sent = await response.json();
-    if (typeof sent.id !== 'string' || !sent.id) return respond(502, 'delivery');
+      refKey: clean.requestId,
+    }, env, fetcher);
+    if (!delivery.ok) return respond(502, 'delivery');
 
     // Non-blocking: ingest to back office after successful email delivery
     await ingestToBackOffice(clean, env, fetcher);
