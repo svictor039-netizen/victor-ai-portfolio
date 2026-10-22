@@ -6,6 +6,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { runMigrations } from './migrations';
 
 const DB_PATH = process.env.DATABASE_PATH || join(process.cwd(), 'data', 'victor.db');
 const DB_DIR = dirname(DB_PATH);
@@ -130,6 +131,7 @@ function seed() {
 
 init();
 seed();
+runMigrations(db);
 
 export interface LeadRecord {
   id: string;
