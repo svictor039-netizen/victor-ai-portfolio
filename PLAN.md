@@ -1245,3 +1245,14 @@ Validation: check/build pass (existing admin unused-import hint and dynamic getS
 ### Homepage project carousel (2026-09-18, local)
 
 The homepage now renders all eight projects from `src/data/projects.ts`, ordered LeadFlow, Content Factory, Travel, KMK, donskoe39, Leftover Food, FairyTales, Catch Job. It reuses the `/projects/` CarouselControls, data attributes, responsive horizontal scroll/snap, swipe and keyboard handlers. Project data, cards, CTA, background and backend are unchanged. Check/build pass with existing diagnostics; browser interaction acceptance remains manual. No commit/push/deploy.
+
+### Catch_Job_4Me — модуль «Ловец заказов» в Back Office (2026-10-22, local)
+
+Ручной подбор свежих заказов из двух открытых Telegram-каналов (`@job_developer`, `@kwork_birzha`) для Telegram-бота. Правило отбора неизменно: 1 самый свежий заказ × 1 тематика × 1 канал × 1 ручная рассылка; тематики — сайты и лендинги, Telegram-боты, AI-агенты и автоматизация, интеграции CRM и сервисов, веб-приложения. Расписаний, автоотправки, оплаты и других источников нет.
+
+- **Чтение каналов** — только через публичный Telegram Public MCP, серверным кодом сайта (`src/lib/catch-job/mcp-client.ts`): JSON-RPC 2.0, ответы JSON/SSE, тайм-аут 15 с, лимит ответа 1 МБ, фиксированный адрес (без произвольного URL), безопасные коды ошибок. В клиентском JavaScript MCP не вызывается. Сервер MCP отдаёт до 20 постов за вызов — сбор идёт страницами, не более 10 на канал.
+- **Страница** `/admin/catch-job/` (пункт «Ловец заказов»), только с существующей админ-сессией: статус MCP и проверка подключения, два фиксированных источника (включение и внутреннее примечание), пять тематик, ручная кнопка «Проверить каналы» с прогрессом по каналам, ответы MCP и посты, итог подборки с честными пустыми состояниями, ручное исключение и комментарии, «Подготовить/Обновить пакет для бота».
+- **БД:** версионные миграции (`src/lib/migrations.ts`, таблица `schema_migrations`); добавляются только таблицы `cj_*`, существующие не меняются. Посты уникальны по каналу и id поста, заказы — по ключу `канал/пост#индекс`. Классификация детерминированная (словарь `topics-v1`, без LLM).
+- **Пакет для бота:** если состав подборки изменился, пакет помечается «устарел», обновление создаёт пакет с новым номером, старый остаётся в истории.
+- **API бота** `/api/catch-job/bot/{batch,feed,deliveries}/` с сервисным токеном `CATCH_JOB_BOT_API_TOKEN`: только последний актуальный пакет, в карточке только тематика, заголовок, дата, канал и ссылка на исходный пост; отчёты о доставке идемпотентны и не содержат Telegram ID.
+- **Проверки:** `tests/catch-job.test.mjs`, `tests/catch-job-batch.test.mjs`; живая проверка MCP — `CATCH_JOB_LIVE_MCP=1`. Production-выкладка — отдельным этапом.

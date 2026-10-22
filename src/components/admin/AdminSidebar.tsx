@@ -6,6 +6,7 @@ import {
   Search,
   Activity,
   Shield,
+  Radar,
   LogOut,
   Menu,
   X,
@@ -16,6 +17,7 @@ const nav = [
   { label: 'Leads', href: '/admin/leads/', icon: Users },
   { label: 'Conversations', href: '/admin/conversations/', icon: MessageSquare },
   { label: 'SEO', href: '/admin/seo/', icon: Search },
+  { label: 'Ловец заказов', href: '/admin/catch-job/', icon: Radar },
   { label: 'System', href: '/admin/system/', icon: Activity },
 ];
 
